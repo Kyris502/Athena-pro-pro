@@ -2951,6 +2951,8 @@ function App(){
   const [pair,setPair]=useState('AUD/USD');
   const [showPairDrop,setShowPairDrop]=useState(false);
   const [tab,setTab]=useState('trade');
+  const [isMobile,setIsMobile]=useState(()=>typeof window!=='undefined'&&window.innerWidth<768);
+  useEffect(()=>{const fn=()=>setIsMobile(window.innerWidth<768);window.addEventListener('resize',fn);return()=>window.removeEventListener('resize',fn);},[]);
   const [tradeLines, setTradeLines] = useState({entry:'',sl:'',tp:'',dir:'BUY'});
   const [chartView, setChartView] = useState('chart'); // 'chart' | 'orderflow' | 'confluence'
   const [predictions, setPredictions] = useState({}); // predictions[tf] = prediction object
@@ -3134,7 +3136,7 @@ function App(){
         
         {/* Chart row */}
         <div style={{flex:'0 0 48%',display:'flex',flexDirection:'column',minHeight:0,overflow:'hidden',
-          '@media(maxWidth:768px)':{flex:'0 0 45%'}}}>
+          }}>
           {/* Chart view tab bar */}
           <div style={{height:32,flexShrink:0,display:'flex',alignItems:'center',
             background:'var(--bg1)',borderBottom:'1px solid var(--border)',gap:0}}>
