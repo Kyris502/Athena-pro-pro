@@ -2878,6 +2878,67 @@ function SettingsModal({settings,onSave,onClose}){
 }
 
 // ── MAIN APP ───────────────────────────────────────────────────────────────
+function PairSearch({pair, onSelect}) {
+  const [q, setQ] = React.useState('');
+  const filtered = React.useMemo(() => {
+    if (!q.trim()) return PAIR_GROUPS;
+    const qUpper = q.toUpperCase();
+    const result = {};
+    Object.entries(PAIR_GROUPS).forEach(([grp, pairs]) => {
+      const matches = pairs.filter(p => p.includes(qUpper));
+      if (matches.length > 0) result[grp] = matches;
+    });
+    return result;
+  }, [q]);
+
+  return (
+    <div style={{display:'flex',flexDirection:'column',maxHeight:'75vh'}}>
+      <input
+        autoFocus
+        className="inp"
+        placeholder="Search pair..."
+        value={q}
+        onChange={e=>setQ(e.target.value)}
+        style={{fontSize:13,marginBottom:6}}
+      />
+      <div style={{overflowY:'auto',flex:1}}>
+        {Object.entries(filtered).map(([grp, pairs]) => (
+          <div key={grp}>
+            <div style={{
+              padding:'5px 10px 3px',
+              fontSize:9,fontWeight:800,color:'var(--text3)',
+              letterSpacing:1,background:'var(--bg1)',
+              position:'sticky',top:0,zIndex:1,
+              borderBottom:'1px solid var(--border)'
+            }}>
+              {grp.toUpperCase()}
+            </div>
+            {pairs.map(p => (
+              <div key={p} onClick={()=>onSelect(p)}
+                style={{
+                  padding:'8px 12px',cursor:'pointer',
+                  display:'flex',alignItems:'center',justifyContent:'space-between',
+                  background:pair===p?'rgba(37,99,235,.15)':'transparent',
+                  borderLeft:pair===p?'3px solid var(--blue-l)':'3px solid transparent',
+                  fontSize:13,fontWeight:600,
+                  color:pair===p?'var(--blue-l)':'var(--text2)',
+                  transition:'background .1s',
+                  borderBottom:'1px solid rgba(255,255,255,.03)'
+                }}
+                onMouseEnter={e=>e.currentTarget.style.background=pair===p?'rgba(37,99,235,.15)':'rgba(255,255,255,.04)'}
+                onMouseLeave={e=>e.currentTarget.style.background=pair===p?'rgba(37,99,235,.15)':'transparent'}
+              >
+                <span>{p}</span>
+                {pair===p && <span style={{fontSize:10,color:'var(--blue-l)'}}>●</span>}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ApiKeyInput({onSave, onSkip, currentKey}) {
   const [key, setKey] = useState(currentKey || '');
   const [testing, setTesting] = useState(false);
@@ -3112,16 +3173,14 @@ function App(){
             <span style={{fontSize:9,color:'var(--text3)'}}>▾</span>
           </button>
           {showPairDrop&&(
-            <div style={{position:'absolute',top:'calc(100% + 5px)',right:0,background:'var(--bg2)',border:'1px solid var(--border2)',
-              borderRadius:10,overflow:'hidden',zIndex:300,minWidth:155,boxShadow:'0 8px 32px rgba(0,0,0,.6)',marginTop:3}}>
-              {PAIRS.map(p=>(
-                <div key={p} onClick={()=>{setPair(p);setShowPairDrop(false);}}
-                  style={{padding:'7px 14px',cursor:'pointer',
-                    background:pair===p?'var(--blue-glow)':'transparent',
-                    fontSize:12,fontWeight:600,color:pair===p?'var(--blue-l)':'var(--text2)'}}>
-                  {p}
-                </div>
-              ))}
+            <div style={{position:'absolute',top:'calc(100% + 5px)',right:0,background:'var(--bg2)',
+              border:'1px solid var(--border2)',borderRadius:12,zIndex:300,width:230,
+              boxShadow:'0 12px 40px rgba(0,0,0,.7)',marginTop:3,display:'flex',flexDirection:'column',
+              maxHeight:'80vh'}}>
+              {/* Search */}
+              <div style={{padding:'8px 10px',borderBottom:'1px solid var(--border)',flexShrink:0}}>
+                <PairSearch pair={pair} onSelect={(p)=>{setPair(p);setShowPairDrop(false);}}/>
+              </div>
             </div>
           )}
         </div>
