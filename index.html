@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATHENA Pro</title>
 <script>/**
@@ -368,3216 +370,3215 @@ window.onerror = function(msg,src,line,col,err){
 window.addEventListener('load', function() {
   try {
 
-// ———————————————————————––
+// -------------------------------------------------------------------------
 // ATHENA PRO - Complete Trading Terminal
-// ———————————————————————––
+// -------------------------------------------------------------------------
 
 const {
-useState,
-useEffect,
-useRef,
-useMemo,
-useCallback
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback
 } = React;
 
-// – CONSTANTS ————————————————————
+// -- CONSTANTS ------------------------------------------------------------
 
 const PAIR_GROUPS = {
-‘Forex Major’: [‘EUR/USD’, ‘GBP/USD’, ‘AUD/USD’, ‘USD/JPY’, ‘USD/CAD’, ‘NZD/USD’, ‘USD/CHF’],
-‘Forex Minor’: [‘GBP/JPY’, ‘EUR/GBP’, ‘EUR/JPY’, ‘AUD/JPY’, ‘GBP/AUD’, ‘EUR/AUD’, ‘CAD/JPY’],
-‘Indices’: [‘US500’, ‘NAS100’, ‘GER40’, ‘UK100’, ‘JP225’, ‘AUS200’, ‘FRA40’],
-‘Crypto’: [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘XRP/USD’, ‘BNB/USD’, ‘ADA/USD’, ‘AVAX/USD’, ‘DOGE/USD’],
-‘Commodities’: [‘XAU/USD’, ‘XAG/USD’, ‘USOIL’, ‘UKOIL’, ‘NGAS’, ‘COPPER’]
+  'Forex Major': ['EUR/USD', 'GBP/USD', 'AUD/USD', 'USD/JPY', 'USD/CAD', 'NZD/USD', 'USD/CHF'],
+  'Forex Minor': ['GBP/JPY', 'EUR/GBP', 'EUR/JPY', 'AUD/JPY', 'GBP/AUD', 'EUR/AUD', 'CAD/JPY'],
+  'Indices': ['US500', 'NAS100', 'GER40', 'UK100', 'JP225', 'AUS200', 'FRA40'],
+  'Crypto': ['BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'BNB/USD', 'ADA/USD', 'AVAX/USD', 'DOGE/USD'],
+  'Commodities': ['XAU/USD', 'XAG/USD', 'USOIL', 'UKOIL', 'NGAS', 'COPPER']
 };
 const PAIRS = Object.values(PAIR_GROUPS).flat();
 const TVMAP = {
-‘EUR/USD’: ‘FX:EURUSD’,
-‘GBP/USD’: ‘FX:GBPUSD’,
-‘AUD/USD’: ‘FX:AUDUSD’,
-‘USD/JPY’: ‘FX:USDJPY’,
-‘USD/CAD’: ‘FX:USDCAD’,
-‘NZD/USD’: ‘FX:NZDUSD’,
-‘USD/CHF’: ‘FX:USDCHF’,
-‘GBP/JPY’: ‘FX:GBPJPY’,
-‘EUR/GBP’: ‘FX:EURGBP’,
-‘EUR/JPY’: ‘FX:EURJPY’,
-‘AUD/JPY’: ‘FX:AUDJPY’,
-‘GBP/AUD’: ‘FX:GBPAUD’,
-‘EUR/AUD’: ‘FX:EURAUD’,
-‘CAD/JPY’: ‘FX:CADJPY’,
-‘US500’: ‘OANDA:SPX500USD’,
-‘NAS100’: ‘OANDA:NAS100USD’,
-‘GER40’: ‘OANDA:DE30EUR’,
-‘UK100’: ‘OANDA:UK100GBP’,
-‘JP225’: ‘OANDA:JP225USD’,
-‘AUS200’: ‘OANDA:AU200AUD’,
-‘FRA40’: ‘OANDA:FR40EUR’,
-‘BTC/USD’: ‘BINANCE:BTCUSDT’,
-‘ETH/USD’: ‘BINANCE:ETHUSDT’,
-‘SOL/USD’: ‘BINANCE:SOLUSDT’,
-‘XRP/USD’: ‘BINANCE:XRPUSDT’,
-‘BNB/USD’: ‘BINANCE:BNBUSDT’,
-‘ADA/USD’: ‘BINANCE:ADAUSDT’,
-‘AVAX/USD’: ‘BINANCE:AVAXUSDT’,
-‘DOGE/USD’: ‘BINANCE:DOGEUSDT’,
-‘XAU/USD’: ‘OANDA:XAUUSD’,
-‘XAG/USD’: ‘OANDA:XAGUSD’,
-‘USOIL’: ‘OANDA:WTICO_USD’,
-‘UKOIL’: ‘OANDA:BRENT_USD’,
-‘NGAS’: ‘OANDA:NATGAS_USD’,
-‘COPPER’: ‘OANDA:COPPER_USD’
+  'EUR/USD': 'FX:EURUSD',
+  'GBP/USD': 'FX:GBPUSD',
+  'AUD/USD': 'FX:AUDUSD',
+  'USD/JPY': 'FX:USDJPY',
+  'USD/CAD': 'FX:USDCAD',
+  'NZD/USD': 'FX:NZDUSD',
+  'USD/CHF': 'FX:USDCHF',
+  'GBP/JPY': 'FX:GBPJPY',
+  'EUR/GBP': 'FX:EURGBP',
+  'EUR/JPY': 'FX:EURJPY',
+  'AUD/JPY': 'FX:AUDJPY',
+  'GBP/AUD': 'FX:GBPAUD',
+  'EUR/AUD': 'FX:EURAUD',
+  'CAD/JPY': 'FX:CADJPY',
+  'US500': 'OANDA:SPX500USD',
+  'NAS100': 'OANDA:NAS100USD',
+  'GER40': 'OANDA:DE30EUR',
+  'UK100': 'OANDA:UK100GBP',
+  'JP225': 'OANDA:JP225USD',
+  'AUS200': 'OANDA:AU200AUD',
+  'FRA40': 'OANDA:FR40EUR',
+  'BTC/USD': 'BINANCE:BTCUSDT',
+  'ETH/USD': 'BINANCE:ETHUSDT',
+  'SOL/USD': 'BINANCE:SOLUSDT',
+  'XRP/USD': 'BINANCE:XRPUSDT',
+  'BNB/USD': 'BINANCE:BNBUSDT',
+  'ADA/USD': 'BINANCE:ADAUSDT',
+  'AVAX/USD': 'BINANCE:AVAXUSDT',
+  'DOGE/USD': 'BINANCE:DOGEUSDT',
+  'XAU/USD': 'OANDA:XAUUSD',
+  'XAG/USD': 'OANDA:XAGUSD',
+  'USOIL': 'OANDA:WTICO_USD',
+  'UKOIL': 'OANDA:BRENT_USD',
+  'NGAS': 'OANDA:NATGAS_USD',
+  'COPPER': 'OANDA:COPPER_USD'
 };
 const TFMAP = {
-‘1m’: ‘1’,
-‘3m’: ‘3’,
-‘5m’: ‘5’,
-‘15m’: ‘15’,
-‘30m’: ‘30’,
-‘45m’: ‘45’,
-‘1H’: ‘60’,
-‘2H’: ‘120’,
-‘4H’: ‘240’,
-‘1D’: ‘D’,
-‘1W’: ‘W’
+  '1m': '1',
+  '3m': '3',
+  '5m': '5',
+  '15m': '15',
+  '30m': '30',
+  '45m': '45',
+  '1H': '60',
+  '2H': '120',
+  '4H': '240',
+  '1D': 'D',
+  '1W': 'W'
 };
-const SCAL_TFS = [‘1m’, ‘3m’, ‘5m’, ‘15m’, ‘30m’, ‘45m’];
-const SWING_TFS = [‘4H’, ‘1D’, ‘1W’];
+const SCAL_TFS = ['1m', '3m', '5m', '15m', '30m', '45m'];
+const SWING_TFS = ['4H', '1D', '1W'];
 const BASE_PRICES = {
-‘EUR/USD’: 1.1350,
-‘GBP/USD’: 1.3280,
-‘AUD/USD’: 0.7153,
-‘USD/JPY’: 142.50,
-‘USD/CAD’: 1.3820,
-‘NZD/USD’: 0.5920,
-‘USD/CHF’: 0.8960,
-‘GBP/JPY’: 189.20,
-‘EUR/GBP’: 0.8540,
-‘EUR/JPY’: 161.80,
-‘AUD/JPY’: 90.80,
-‘GBP/AUD’: 2.0820,
-‘EUR/AUD’: 1.7780,
-‘CAD/JPY’: 103.20,
-‘US500’: 5480,
-‘NAS100’: 19200,
-‘GER40’: 22100,
-‘UK100’: 8320,
-‘JP225’: 34800,
-‘AUS200’: 7920,
-‘FRA40’: 7650,
-‘XAU/USD’: 4788,
-‘XAG/USD’: 32.50,
-‘USOIL’: 62.80,
-‘UKOIL’: 66.40,
-‘NGAS’: 3.18,
-‘COPPER’: 4.85,
-‘BTC/USD’: 94800,
-‘ETH/USD’: 1780,
-‘SOL/USD’: 148,
-‘XRP/USD’: 0.52,
-‘BNB/USD’: 598,
-‘ADA/USD’: 0.35,
-‘AVAX/USD’: 22.5,
-‘DOGE/USD’: 0.168
+  'EUR/USD': 1.1350,
+  'GBP/USD': 1.3280,
+  'AUD/USD': 0.7153,
+  'USD/JPY': 142.50,
+  'USD/CAD': 1.3820,
+  'NZD/USD': 0.5920,
+  'USD/CHF': 0.8960,
+  'GBP/JPY': 189.20,
+  'EUR/GBP': 0.8540,
+  'EUR/JPY': 161.80,
+  'AUD/JPY': 90.80,
+  'GBP/AUD': 2.0820,
+  'EUR/AUD': 1.7780,
+  'CAD/JPY': 103.20,
+  'US500': 5480,
+  'NAS100': 19200,
+  'GER40': 22100,
+  'UK100': 8320,
+  'JP225': 34800,
+  'AUS200': 7920,
+  'FRA40': 7650,
+  'XAU/USD': 4788,
+  'XAG/USD': 32.50,
+  'USOIL': 62.80,
+  'UKOIL': 66.40,
+  'NGAS': 3.18,
+  'COPPER': 4.85,
+  'BTC/USD': 94800,
+  'ETH/USD': 1780,
+  'SOL/USD': 148,
+  'XRP/USD': 0.52,
+  'BNB/USD': 598,
+  'ADA/USD': 0.35,
+  'AVAX/USD': 22.5,
+  'DOGE/USD': 0.168
 };
 const TICK_VOL = {
-‘EUR/USD’: 0.00008,
-‘GBP/USD’: 0.00010,
-‘AUD/USD’: 0.00007,
-‘NZD/USD’: 0.00006,
-‘USD/JPY’: 0.012,
-‘USD/CAD’: 0.00009,
-‘USD/CHF’: 0.00008,
-‘GBP/JPY’: 0.018,
-‘EUR/GBP’: 0.00006,
-‘EUR/JPY’: 0.015,
-‘AUD/JPY’: 0.010,
-‘GBP/AUD’: 0.00012,
-‘EUR/AUD’: 0.00010,
-‘CAD/JPY’: 0.012,
-‘US500’: 0.8,
-‘NAS100’: 2.5,
-‘GER40’: 5.0,
-‘UK100’: 2.0,
-‘JP225’: 15,
-‘AUS200’: 2.5,
-‘FRA40’: 3.5,
-‘XAU/USD’: 0.85,
-‘XAG/USD’: 0.015,
-‘USOIL’: 0.025,
-‘UKOIL’: 0.028,
-‘NGAS’: 0.003,
-‘COPPER’: 0.002,
-‘BTC/USD’: 28.0,
-‘ETH/USD’: 1.8,
-‘SOL/USD’: 0.45,
-‘XRP/USD’: 0.0006,
-‘BNB/USD’: 0.8,
-‘ADA/USD’: 0.0004,
-‘AVAX/USD’: 0.06,
-‘DOGE/USD’: 0.0003
+  'EUR/USD': 0.00008,
+  'GBP/USD': 0.00010,
+  'AUD/USD': 0.00007,
+  'NZD/USD': 0.00006,
+  'USD/JPY': 0.012,
+  'USD/CAD': 0.00009,
+  'USD/CHF': 0.00008,
+  'GBP/JPY': 0.018,
+  'EUR/GBP': 0.00006,
+  'EUR/JPY': 0.015,
+  'AUD/JPY': 0.010,
+  'GBP/AUD': 0.00012,
+  'EUR/AUD': 0.00010,
+  'CAD/JPY': 0.012,
+  'US500': 0.8,
+  'NAS100': 2.5,
+  'GER40': 5.0,
+  'UK100': 2.0,
+  'JP225': 15,
+  'AUS200': 2.5,
+  'FRA40': 3.5,
+  'XAU/USD': 0.85,
+  'XAG/USD': 0.015,
+  'USOIL': 0.025,
+  'UKOIL': 0.028,
+  'NGAS': 0.003,
+  'COPPER': 0.002,
+  'BTC/USD': 28.0,
+  'ETH/USD': 1.8,
+  'SOL/USD': 0.45,
+  'XRP/USD': 0.0006,
+  'BNB/USD': 0.8,
+  'ADA/USD': 0.0004,
+  'AVAX/USD': 0.06,
+  'DOGE/USD': 0.0003
 };
 const PIP_CFG = {
-‘EUR/USD’: {
-pip: 0.0001,
-pv: 10
-},
-‘GBP/USD’: {
-pip: 0.0001,
-pv: 10
-},
-‘AUD/USD’: {
-pip: 0.0001,
-pv: 10
-},
-‘NZD/USD’: {
-pip: 0.0001,
-pv: 10
-},
-‘USD/JPY’: {
-pip: 0.01,
-pv: 9.1
-},
-‘USD/CAD’: {
-pip: 0.0001,
-pv: 7.5
-},
-‘USD/CHF’: {
-pip: 0.0001,
-pv: 10
-},
-‘GBP/JPY’: {
-pip: 0.01,
-pv: 9.1
-},
-‘EUR/GBP’: {
-pip: 0.0001,
-pv: 10
-},
-‘EUR/JPY’: {
-pip: 0.01,
-pv: 9.1
-},
-‘AUD/JPY’: {
-pip: 0.01,
-pv: 9.1
-},
-‘GBP/AUD’: {
-pip: 0.0001,
-pv: 10
-},
-‘EUR/AUD’: {
-pip: 0.0001,
-pv: 10
-},
-‘CAD/JPY’: {
-pip: 0.01,
-pv: 9.1
-},
-‘US500’: {
-pip: 0.1,
-pv: 1
-},
-‘NAS100’: {
-pip: 0.1,
-pv: 1
-},
-‘GER40’: {
-pip: 0.1,
-pv: 1
-},
-‘UK100’: {
-pip: 0.1,
-pv: 1
-},
-‘JP225’: {
-pip: 1,
-pv: 1
-},
-‘AUS200’: {
-pip: 0.1,
-pv: 1
-},
-‘FRA40’: {
-pip: 0.1,
-pv: 1
-},
-‘XAU/USD’: {
-pip: 0.1,
-pv: 10
-},
-‘XAG/USD’: {
-pip: 0.01,
-pv: 5
-},
-‘USOIL’: {
-pip: 0.01,
-pv: 10
-},
-‘UKOIL’: {
-pip: 0.01,
-pv: 10
-},
-‘NGAS’: {
-pip: 0.001,
-pv: 10
-},
-‘COPPER’: {
-pip: 0.0001,
-pv: 25
-},
-‘BTC/USD’: {
-pip: 1,
-pv: 1
-},
-‘ETH/USD’: {
-pip: 0.1,
-pv: 1
-},
-‘SOL/USD’: {
-pip: 0.01,
-pv: 1
-},
-‘XRP/USD’: {
-pip: 0.0001,
-pv: 1
-},
-‘BNB/USD’: {
-pip: 0.1,
-pv: 1
-},
-‘ADA/USD’: {
-pip: 0.0001,
-pv: 1
-},
-‘AVAX/USD’: {
-pip: 0.01,
-pv: 1
-},
-‘DOGE/USD’: {
-pip: 0.00001,
-pv: 1
-}
+  'EUR/USD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'GBP/USD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'AUD/USD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'NZD/USD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'USD/JPY': {
+    pip: 0.01,
+    pv: 9.1
+  },
+  'USD/CAD': {
+    pip: 0.0001,
+    pv: 7.5
+  },
+  'USD/CHF': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'GBP/JPY': {
+    pip: 0.01,
+    pv: 9.1
+  },
+  'EUR/GBP': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'EUR/JPY': {
+    pip: 0.01,
+    pv: 9.1
+  },
+  'AUD/JPY': {
+    pip: 0.01,
+    pv: 9.1
+  },
+  'GBP/AUD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'EUR/AUD': {
+    pip: 0.0001,
+    pv: 10
+  },
+  'CAD/JPY': {
+    pip: 0.01,
+    pv: 9.1
+  },
+  'US500': {
+    pip: 0.1,
+    pv: 1
+  },
+  'NAS100': {
+    pip: 0.1,
+    pv: 1
+  },
+  'GER40': {
+    pip: 0.1,
+    pv: 1
+  },
+  'UK100': {
+    pip: 0.1,
+    pv: 1
+  },
+  'JP225': {
+    pip: 1,
+    pv: 1
+  },
+  'AUS200': {
+    pip: 0.1,
+    pv: 1
+  },
+  'FRA40': {
+    pip: 0.1,
+    pv: 1
+  },
+  'XAU/USD': {
+    pip: 0.1,
+    pv: 10
+  },
+  'XAG/USD': {
+    pip: 0.01,
+    pv: 5
+  },
+  'USOIL': {
+    pip: 0.01,
+    pv: 10
+  },
+  'UKOIL': {
+    pip: 0.01,
+    pv: 10
+  },
+  'NGAS': {
+    pip: 0.001,
+    pv: 10
+  },
+  'COPPER': {
+    pip: 0.0001,
+    pv: 25
+  },
+  'BTC/USD': {
+    pip: 1,
+    pv: 1
+  },
+  'ETH/USD': {
+    pip: 0.1,
+    pv: 1
+  },
+  'SOL/USD': {
+    pip: 0.01,
+    pv: 1
+  },
+  'XRP/USD': {
+    pip: 0.0001,
+    pv: 1
+  },
+  'BNB/USD': {
+    pip: 0.1,
+    pv: 1
+  },
+  'ADA/USD': {
+    pip: 0.0001,
+    pv: 1
+  },
+  'AVAX/USD': {
+    pip: 0.01,
+    pv: 1
+  },
+  'DOGE/USD': {
+    pip: 0.00001,
+    pv: 1
+  }
 };
 const ITEMS = [{
-id: ‘trend’,
-label: ‘Trend’,
-mode: ‘AUTO’,
-w: {
-s: 5,
-m: 5,
-l: 10
-}
+  id: 'trend',
+  label: 'Trend',
+  mode: 'AUTO',
+  w: {
+    s: 5,
+    m: 5,
+    l: 10
+  }
 }, {
-id: ‘aoi’,
-label: ‘At AOI / Rejected’,
-mode: ‘AUTO’,
-w: {
-s: 5,
-m: 5,
-l: 10
-}
+  id: 'aoi',
+  label: 'At AOI / Rejected',
+  mode: 'AUTO',
+  w: {
+    s: 5,
+    m: 5,
+    l: 10
+  }
 }, {
-id: ‘ema’,
-label: ‘Touching EMA’,
-mode: ‘AUTO’,
-w: {
-s: 5,
-m: 5,
-l: 5
-}
+  id: 'ema',
+  label: 'Touching EMA',
+  mode: 'AUTO',
+  w: {
+    s: 5,
+    m: 5,
+    l: 5
+  }
 }, {
-id: ‘psych’,
-label: ‘Round Psychological Level’,
-mode: ‘AUTO’,
-w: {
-s: 5,
-m: 5,
-l: 5
-}
+  id: 'psych',
+  label: 'Round Psychological Level',
+  mode: 'AUTO',
+  w: {
+    s: 5,
+    m: 5,
+    l: 5
+  }
 }, {
-id: ‘struct’,
-label: ‘Rejection from Previous Structure’,
-mode: ‘USER’,
-w: {
-s: 5,
-m: 10,
-l: 10
-}
+  id: 'struct',
+  label: 'Rejection from Previous Structure',
+  mode: 'USER',
+  w: {
+    s: 5,
+    m: 10,
+    l: 10
+  }
 }, {
-id: ‘candle’,
-label: ‘Candlestick Rejection from AOI’,
-mode: ‘AUTO’,
-w: {
-s: 5,
-m: 5,
-l: 10
-}
+  id: 'candle',
+  label: 'Candlestick Rejection from AOI',
+  mode: 'AUTO',
+  w: {
+    s: 5,
+    m: 5,
+    l: 10
+  }
 }, {
-id: ‘hns’,
-label: ‘Break & Retest / H&S Pattern’,
-mode: ‘USER’,
-w: {
-s: 5,
-m: 10,
-l: 10
-}
+  id: 'hns',
+  label: 'Break & Retest / H&S Pattern',
+  mode: 'USER',
+  w: {
+    s: 5,
+    m: 10,
+    l: 10
+  }
 }];
 const SESSIONS = [{
-n: ‘Sydney’,
-icon: ‘\uD83C\uDF0F’,
-s: 21,
-e: 6
+  n: 'Sydney',
+  icon: '\uD83C\uDF0F',
+  s: 21,
+  e: 6
 }, {
-n: ‘Tokyo’,
-icon: ‘\uD83C\uDFEF’,
-s: 0,
-e: 9
+  n: 'Tokyo',
+  icon: '\uD83C\uDFEF',
+  s: 0,
+  e: 9
 }, {
-n: ‘London’,
-icon: ‘\uD83C\uDFDB’,
-s: 7,
-e: 16
+  n: 'London',
+  icon: '\uD83C\uDFDB',
+  s: 7,
+  e: 16
 }, {
-n: ‘New York’,
-icon: ‘\uD83D\uDDFD’,
-s: 12,
-e: 21
+  n: 'New York',
+  icon: '\uD83D\uDDFD',
+  s: 12,
+  e: 21
 }];
 
-// – HELPERS –––––––––––––––––––––––––––––––
+// -- HELPERS --------------------------------------------------------------
 
 function pairDec(pair) {
-const isJPY = pair.includes(‘JPY’);
-const isBig = [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘BNB/USD’, ‘XAU/USD’, ‘US500’, ‘NAS100’, ‘GER40’, ‘UK100’, ‘JP225’, ‘AUS200’, ‘FRA40’, ‘USOIL’, ‘UKOIL’, ‘XAG/USD’].includes(pair);
-return isJPY || isBig ? 2 : 5;
+  const isJPY = pair.includes('JPY');
+  const isBig = ['BTC/USD', 'ETH/USD', 'SOL/USD', 'BNB/USD', 'XAU/USD', 'US500', 'NAS100', 'GER40', 'UK100', 'JP225', 'AUS200', 'FRA40', 'USOIL', 'UKOIL', 'XAG/USD'].includes(pair);
+  return isJPY || isBig ? 2 : 5;
 }
 function isScalp(tf) {
-return SCAL_TFS.includes(tf);
+  return SCAL_TFS.includes(tf);
 }
 function tfCat(tf) {
-return isScalp(tf) ? ‘s’ : [‘2H’, ‘4H’].includes(tf) ? ‘m’ : ‘l’;
+  return isScalp(tf) ? 's' : ['2H', '4H'].includes(tf) ? 'm' : 'l';
 }
 function fmtSecs(s) {
-const h = Math.floor(s / 3600),
-m = Math.floor(s % 3600 / 60),
-sc = Math.floor(s % 60);
-return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sc).padStart(2, '0')}`;
+  const h = Math.floor(s / 3600),
+    m = Math.floor(s % 3600 / 60),
+    sc = Math.floor(s % 60);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sc).padStart(2, '0')}`;
 }
 function confLabel(p) {
-if (p >= 80) return {
-label: ‘STRONG’,
-c: ‘#3b82f6’
-};
-if (p >= 60) return {
-label: ‘MODERATE’,
-c: ‘#3b82f6’
-};
-if (p >= 40) return {
-label: ‘FAIR’,
-c: ‘#f59e0b’
-};
-if (p >= 20) return {
-label: ‘WEAK’,
-c: ‘#f97316’
-};
-return {
-label: ‘NONE’,
-c: ‘#4a5570’
-};
+  if (p >= 80) return {
+    label: 'STRONG',
+    c: '#3b82f6'
+  };
+  if (p >= 60) return {
+    label: 'MODERATE',
+    c: '#3b82f6'
+  };
+  if (p >= 40) return {
+    label: 'FAIR',
+    c: '#f59e0b'
+  };
+  if (p >= 20) return {
+    label: 'WEAK',
+    c: '#f97316'
+  };
+  return {
+    label: 'NONE',
+    c: '#4a5570'
+  };
 }
 function getSessionStatus() {
-const now = new Date();
-const h = now.getUTCHours() + now.getUTCMinutes() / 60;
-return SESSIONS.map(s => {
-const act = s.e < s.s ? h >= s.s || h < s.e : h >= s.s && h < s.e;
-const dur = s.e > s.s ? s.e - s.s : 24 - s.s + s.e;
-let rem = 0;
-if (act) {
-let en = s.e <= s.s ? s.e + 24 : s.e;
-let ch = h < s.s ? h + 24 : h;
-rem = Math.max(0, (en - ch) * 3600);
-}
-const prog = act && dur > 0 ? Math.min(100, 100 - rem / (dur * 3600) * 100) : 0;
-return {
-…s,
-act,
-rem,
-prog
-};
-});
+  const now = new Date();
+  const h = now.getUTCHours() + now.getUTCMinutes() / 60;
+  return SESSIONS.map(s => {
+    const act = s.e < s.s ? h >= s.s || h < s.e : h >= s.s && h < s.e;
+    const dur = s.e > s.s ? s.e - s.s : 24 - s.s + s.e;
+    let rem = 0;
+    if (act) {
+      let en = s.e <= s.s ? s.e + 24 : s.e;
+      let ch = h < s.s ? h + 24 : h;
+      rem = Math.max(0, (en - ch) * 3600);
+    }
+    const prog = act && dur > 0 ? Math.min(100, 100 - rem / (dur * 3600) * 100) : 0;
+    return {
+      ...s,
+      act,
+      rem,
+      prog
+    };
+  });
 }
 function isForexOpen() {
-const now = new Date();
-const day = now.getUTCDay();
-const t = now.getUTCHours() * 60 + now.getUTCMinutes();
-if (day === 6) return false;
-if (day === 0 && t < 22 * 60) return false;
-if (day === 5 && t >= 22 * 60) return false;
-return true;
+  const now = new Date();
+  const day = now.getUTCDay();
+  const t = now.getUTCHours() * 60 + now.getUTCMinutes();
+  if (day === 6) return false;
+  if (day === 0 && t < 22 * 60) return false;
+  if (day === 5 && t >= 22 * 60) return false;
+  return true;
 }
 
-// – LIVE PRICE HOOK —————————————————––
+// -- LIVE PRICE HOOK -------------------------------------------------------
 
-let TD_KEY = ‘’;
+let TD_KEY = '';
 try {
-TD_KEY = localStorage.getItem(‘athena_td_key’) || ‘’;
+  TD_KEY = localStorage.getItem('athena_td_key') || '';
 } catch (e) {}
 function useLivePrice(pair) {
-const [price, setPrice] = useState(BASE_PRICES[pair] || 1);
-const [change, setChange] = useState(0);
-const [pct, setPct] = useState(0);
-const [src, setSrc] = useState(‘SIM’);
-const refs = useRef({
-ws: null,
-sim: null,
-open: BASE_PRICES[pair] || 1
-});
-useEffect(() => {
-const base = BASE_PRICES[pair] || 1;
-refs.current.open = base;
-setPrice(base);
-setChange(0);
-setPct(0);
-setSrc(‘SIM’);
-function startSim() {
-const isCrypto = [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘XRP/USD’, ‘BNB/USD’, ‘ADA/USD’, ‘AVAX/USD’, ‘DOGE/USD’].includes(pair);
-if (!isCrypto && !isForexOpen()) {
-setSrc(‘CLOSED’);
-return;
-}
-setSrc(‘SIM’);
-const tv = TICK_VOL[pair] || 0.0001;
-let p = base,
-drift = 0,
-dt = 0;
-refs.current.sim = setInterval(() => {
-if (!isCrypto && !isForexOpen()) {
-clearInterval(refs.current.sim);
-setSrc(‘CLOSED’);
-return;
-}
-dt++;
-if (dt > 8 + Math.floor(Math.random() * 12)) {
-drift = (Math.random() - .5) * tv * 2;
-dt = 0;
-}
-const dev = (p - base) / base;
-p = parseFloat((p + (Math.random() - .5 + drift - dev * 0.08) * tv).toFixed(pairDec(pair)));
-refs.current.price = p;
-const ch = p - refs.current.open;
-setPrice(p);
-setChange(parseFloat(ch.toFixed(5)));
-setPct(parseFloat((ch / refs.current.open * 100).toFixed(3)));
-}, 700);
-}
-function connectBinance() {
-const sym = pair.replace(’/’, ‘’).toLowerCase() + ‘usdt’.replace(‘usdusdt’, ‘usdt’);
-const wsym = pair === ‘BTC/USD’ ? ‘btcusdt’ : pair === ‘ETH/USD’ ? ‘ethusdt’ : pair === ‘SOL/USD’ ? ‘solusdt’ : pair === ‘BNB/USD’ ? ‘bnbusdt’ : null;
-if (!wsym) {
-startSim();
-return;
-}
-try {
-const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${wsym}@ticker`);
-refs.current.ws = ws;
-ws.onopen = () => setSrc(‘BINANCE’);
-ws.onmessage = e => {
-const d = JSON.parse(e.data);
-const p = parseFloat(d.c);
-if (isNaN(p)) return;
-refs.current.open = parseFloat(d.o);
-setPrice(p);
-setChange(parseFloat(d.p));
-setPct(parseFloat(d.P));
-};
-ws.onerror = () => startSim();
-ws.onclose = () => {};
-} catch {
-startSim();
-}
-}
-function connectTD() {
-try {
-const ws = new WebSocket(‘wss://ws.twelvedata.com/v1/quotes/price?apikey=’ + TD_KEY);
-refs.current.ws = ws;
-ws.onopen = () => {
-setSrc(‘LIVE’);
-ws.send(JSON.stringify({
-action: ‘subscribe’,
-params: {
-symbols: pair
-}
-}));
-};
-ws.onmessage = e => {
-const d = JSON.parse(e.data);
-if (d.event === ‘price’ && d.price) {
-const p = parseFloat(d.price);
-if (!isNaN(p) && p > 0) {
-setPrice(p);
-const ch = p - refs.current.open;
-setChange(parseFloat(ch.toFixed(5)));
-setPct(parseFloat((ch / refs.current.open * 100).toFixed(3)));
-}
-}
-if (d.event === ‘error’) {
-ws.close();
-startSim();
-}
-};
-ws.onerror = () => startSim();
-// Also fetch current price via REST
-fetch(`https://api.twelvedata.com/price?symbol=${pair}&apikey=${TD_KEY}`).then(r => r.json()).then(d => {
-if (d.price) {
-refs.current.open = parseFloat(d.price);
-setPrice(parseFloat(d.price));
-}
-}).catch(() => {});
-} catch {
-startSim();
-}
-}
-const isCrypto = [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘XRP/USD’, ‘BNB/USD’, ‘ADA/USD’, ‘AVAX/USD’, ‘DOGE/USD’].includes(pair);
-if (TD_KEY) connectTD();else if (isCrypto) connectBinance();else startSim();
-return () => {
-if (refs.current.ws) {
-refs.current.ws.close();
-refs.current.ws = null;
-}
-if (refs.current.sim) {
-clearInterval(refs.current.sim);
-refs.current.sim = null;
-}
-};
-}, [pair]);
-return {
-price,
-change,
-pct,
-src
-};
+  const [price, setPrice] = useState(BASE_PRICES[pair] || 1);
+  const [change, setChange] = useState(0);
+  const [pct, setPct] = useState(0);
+  const [src, setSrc] = useState('SIM');
+  const refs = useRef({
+    ws: null,
+    sim: null,
+    open: BASE_PRICES[pair] || 1
+  });
+  useEffect(() => {
+    const base = BASE_PRICES[pair] || 1;
+    refs.current.open = base;
+    setPrice(base);
+    setChange(0);
+    setPct(0);
+    setSrc('SIM');
+    function startSim() {
+      const isCrypto = ['BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'BNB/USD', 'ADA/USD', 'AVAX/USD', 'DOGE/USD'].includes(pair);
+      if (!isCrypto && !isForexOpen()) {
+        setSrc('CLOSED');
+        return;
+      }
+      setSrc('SIM');
+      const tv = TICK_VOL[pair] || 0.0001;
+      let p = base,
+        drift = 0,
+        dt = 0;
+      refs.current.sim = setInterval(() => {
+        if (!isCrypto && !isForexOpen()) {
+          clearInterval(refs.current.sim);
+          setSrc('CLOSED');
+          return;
+        }
+        dt++;
+        if (dt > 8 + Math.floor(Math.random() * 12)) {
+          drift = (Math.random() - .5) * tv * 2;
+          dt = 0;
+        }
+        const dev = (p - base) / base;
+        p = parseFloat((p + (Math.random() - .5 + drift - dev * 0.08) * tv).toFixed(pairDec(pair)));
+        refs.current.price = p;
+        const ch = p - refs.current.open;
+        setPrice(p);
+        setChange(parseFloat(ch.toFixed(5)));
+        setPct(parseFloat((ch / refs.current.open * 100).toFixed(3)));
+      }, 700);
+    }
+    function connectBinance() {
+      const sym = pair.replace('/', '').toLowerCase() + 'usdt'.replace('usdusdt', 'usdt');
+      const wsym = pair === 'BTC/USD' ? 'btcusdt' : pair === 'ETH/USD' ? 'ethusdt' : pair === 'SOL/USD' ? 'solusdt' : pair === 'BNB/USD' ? 'bnbusdt' : null;
+      if (!wsym) {
+        startSim();
+        return;
+      }
+      try {
+        const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${wsym}@ticker`);
+        refs.current.ws = ws;
+        ws.onopen = () => setSrc('BINANCE');
+        ws.onmessage = e => {
+          const d = JSON.parse(e.data);
+          const p = parseFloat(d.c);
+          if (isNaN(p)) return;
+          refs.current.open = parseFloat(d.o);
+          setPrice(p);
+          setChange(parseFloat(d.p));
+          setPct(parseFloat(d.P));
+        };
+        ws.onerror = () => startSim();
+        ws.onclose = () => {};
+      } catch {
+        startSim();
+      }
+    }
+    function connectTD() {
+      try {
+        const ws = new WebSocket('wss://ws.twelvedata.com/v1/quotes/price?apikey=' + TD_KEY);
+        refs.current.ws = ws;
+        ws.onopen = () => {
+          setSrc('LIVE');
+          ws.send(JSON.stringify({
+            action: 'subscribe',
+            params: {
+              symbols: pair
+            }
+          }));
+        };
+        ws.onmessage = e => {
+          const d = JSON.parse(e.data);
+          if (d.event === 'price' && d.price) {
+            const p = parseFloat(d.price);
+            if (!isNaN(p) && p > 0) {
+              setPrice(p);
+              const ch = p - refs.current.open;
+              setChange(parseFloat(ch.toFixed(5)));
+              setPct(parseFloat((ch / refs.current.open * 100).toFixed(3)));
+            }
+          }
+          if (d.event === 'error') {
+            ws.close();
+            startSim();
+          }
+        };
+        ws.onerror = () => startSim();
+        // Also fetch current price via REST
+        fetch(`https://api.twelvedata.com/price?symbol=${pair}&apikey=${TD_KEY}`).then(r => r.json()).then(d => {
+          if (d.price) {
+            refs.current.open = parseFloat(d.price);
+            setPrice(parseFloat(d.price));
+          }
+        }).catch(() => {});
+      } catch {
+        startSim();
+      }
+    }
+    const isCrypto = ['BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'BNB/USD', 'ADA/USD', 'AVAX/USD', 'DOGE/USD'].includes(pair);
+    if (TD_KEY) connectTD();else if (isCrypto) connectBinance();else startSim();
+    return () => {
+      if (refs.current.ws) {
+        refs.current.ws.close();
+        refs.current.ws = null;
+      }
+      if (refs.current.sim) {
+        clearInterval(refs.current.sim);
+        refs.current.sim = null;
+      }
+    };
+  }, [pair]);
+  return {
+    price,
+    change,
+    pct,
+    src
+  };
 }
 
-// – UI COMPONENTS ———————————————————
+// -- UI COMPONENTS ---------------------------------------------------------
 
 function Toggle(_ref) {
-let {
-checked,
-onChange
-} = _ref;
-return /*#**PURE***/React.createElement(“label”, {
-className: “tog”
-}, /*#**PURE***/React.createElement(“input”, {
-type: “checkbox”,
-checked: !!checked,
-onChange: e => onChange(e.target.checked)
-}), /*#**PURE***/React.createElement(“span”, {
-className: “sld”
-}));
+  let {
+    checked,
+    onChange
+  } = _ref;
+  return /*#__PURE__*/React.createElement("label", {
+    className: "tog"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: !!checked,
+    onChange: e => onChange(e.target.checked)
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "sld"
+  }));
 }
 function Ring(_ref2) {
-let {
-pct,
-size = 100
-} = _ref2;
-const r = (size - 12) / 2,
-circ = 2 * Math.PI * r;
-const {
-label,
-c
-} = confLabel(pct);
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’,
-width: size,
-height: size,
-flexShrink: 0
-}
-}, /*#**PURE***/React.createElement(“svg”, {
-width: size,
-height: size,
-style: {
-transform: ‘rotate(-90deg)’
-}
-}, /*#**PURE***/React.createElement(“circle”, {
-cx: size / 2,
-cy: size / 2,
-r: r,
-fill: “none”,
-stroke: “#1a2238”,
-strokeWidth: 9
-}), /*#**PURE***/React.createElement(“circle”, {
-cx: size / 2,
-cy: size / 2,
-r: r,
-fill: “none”,
-stroke: c,
-strokeWidth: 9,
-strokeLinecap: “round”,
-strokeDasharray: `${pct / 100 * circ} ${circ}`,
-style: {
-transition: ‘stroke-dasharray .5s’
-}
-})), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-inset: 0,
-display: ‘flex’,
-flexDirection: ‘column’,
-alignItems: ‘center’,
-justifyContent: ‘center’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: size < 90 ? 16 : 20,
-fontWeight: 800,
-color: c,
-lineHeight: 1
-}
-}, pct, “%”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 7,
-fontWeight: 700,
-color: c,
-letterSpacing: .8,
-marginTop: 1
-}
-}, label)));
+  let {
+    pct,
+    size = 100
+  } = _ref2;
+  const r = (size - 12) / 2,
+    circ = 2 * Math.PI * r;
+  const {
+    label,
+    c
+  } = confLabel(pct);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: size,
+      height: size,
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: size,
+    style: {
+      transform: 'rotate(-90deg)'
+    }
+  }, /*#__PURE__*/React.createElement("circle", {
+    cx: size / 2,
+    cy: size / 2,
+    r: r,
+    fill: "none",
+    stroke: "#1a2238",
+    strokeWidth: 9
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: size / 2,
+    cy: size / 2,
+    r: r,
+    fill: "none",
+    stroke: c,
+    strokeWidth: 9,
+    strokeLinecap: "round",
+    strokeDasharray: `${pct / 100 * circ} ${circ}`,
+    style: {
+      transition: 'stroke-dasharray .5s'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      inset: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: size < 90 ? 16 : 20,
+      fontWeight: 800,
+      color: c,
+      lineHeight: 1
+    }
+  }, pct, "%"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 7,
+      fontWeight: 700,
+      color: c,
+      letterSpacing: .8,
+      marginTop: 1
+    }
+  }, label)));
 }
 
-// – TV CHART –––––––––––––––––––––––––––––––
+// -- TV CHART --------------------------------------------------------------
 
 function TVChart(_ref3) {
-let {
-pair,
-tf,
-livePrice,
-tradeLines
-} = *ref3;
-const dec = pairDec(pair);
-const bull = livePrice ? livePrice >= (BASE_PRICES[pair] || 1) : true;
-const scalp = isScalp(tf);
-const sym = TVMAP[pair] || ‘FX:EURUSD’;
-const iv = TFMAP[tf] || ‘60’;
-const src = ‘https://s3.tradingview.com/widgetembed/?frameElementId=tv_chart’ + ‘&symbol=’ + encodeURIComponent(sym) + ‘&interval=’ + iv + ‘&theme=dark&style=1&locale=en’ + ‘&enable_publishing=0&hide_top_toolbar=0’ + ‘&allow_symbol_change=0&save_image=0&withdateranges=1’ + ‘&studies=’ + encodeURIComponent(‘MASimple@tv-scriptstd;length=50’);
-const eVal = parseFloat(tradeLines == null ? void 0 : tradeLines.entry);
-const slVal = parseFloat(tradeLines == null ? void 0 : tradeLines.sl);
-const tpVal = parseFloat(tradeLines == null ? void 0 : tradeLines.tp);
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’,
-width: ‘100%’,
-height: ‘100%’
-}
-}, /*#**PURE***/React.createElement(“iframe”, {
-key: sym + ’*’ + iv,
-src: src,
-style: {
-width: ‘100%’,
-height: ‘100%’,
-border: ‘none’,
-display: ‘block’
-},
-allowFullScreen: true,
-title: “Chart”
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-top: 6,
-left: 6,
-zIndex: 10,
-pointerEvents: ‘none’,
-background: ‘rgba(7,9,15,.9)’,
-backdropFilter: ‘blur(8px)’,
-borderRadius: 8,
-padding: ‘5px 10px’,
-border: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-fontWeight: 700,
-color: ‘var(–t2)’
-}
-}, pair), livePrice && /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 13,
-fontWeight: 800,
-color: bull ? ‘var(–green)’ : ‘var(–red)’
-}
-}, livePrice.toFixed(dec)), /*#**PURE***/React.createElement(“span”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 3,
-padding: ‘1px 6px’,
-borderRadius: 4,
-fontSize: 9,
-fontWeight: 700,
-background: ‘rgba(16,185,129,.15)’,
-color: ‘#10b981’,
-letterSpacing: .5
-}
-}, /*#**PURE***/React.createElement(“span”, {
-className: “pulse”,
-style: {
-width: 5,
-height: 5,
-borderRadius: ‘50%’,
-background: ‘#10b981’,
-display: ‘inline-block’
-}
-}), “LIVE”)), (tpVal > 0 || eVal > 0 || slVal > 0) && /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-top: 6,
-right: 6,
-zIndex: 10,
-pointerEvents: ‘none’,
-display: ‘flex’,
-flexDirection: ‘column’,
-gap: 3
-}
-}, tpVal > 0 && /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘rgba(16,185,129,.2)’,
-border: ‘1px solid var(–green)’,
-borderRadius: 6,
-padding: ‘3px 9px’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-backdropFilter: ‘blur(6px)’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-color: ‘var(–green)’,
-letterSpacing: .5
-}
-}, “TP”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-fontWeight: 800,
-color: ‘#34d399’,
-fontFamily: ‘monospace’
-}
-}, tpVal.toFixed(dec))), eVal > 0 && /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘rgba(255,255,255,.08)’,
-border: ‘1px solid rgba(255,255,255,.35)’,
-borderRadius: 6,
-padding: ‘3px 9px’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-backdropFilter: ‘blur(6px)’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-color: ‘rgba(255,255,255,.6)’,
-letterSpacing: .5
-}
-}, “ENTRY”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-fontWeight: 800,
-color: ‘#e2e8f5’,
-fontFamily: ‘monospace’
-}
-}, eVal.toFixed(dec))), slVal > 0 && /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘rgba(239,68,68,.2)’,
-border: ‘1px solid var(–red)’,
-borderRadius: 6,
-padding: ‘3px 9px’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-backdropFilter: ‘blur(6px)’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-color: ‘var(–red)’,
-letterSpacing: .5
-}
-}, “SL”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-fontWeight: 800,
-color: ‘#f87171’,
-fontFamily: ‘monospace’
-}
-}, slVal.toFixed(dec)))), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-bottom: 28,
-left: 6,
-zIndex: 10,
-pointerEvents: ‘none’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-display: ‘inline-flex’,
-alignItems: ‘center’,
-gap: 4,
-padding: ‘3px 8px’,
-borderRadius: 5,
-fontSize: 10,
-fontWeight: 700,
-letterSpacing: .5,
-background: bull ? ‘rgba(16,185,129,.15)’ : ‘rgba(239,68,68,.15)’,
-color: bull ? ‘var(–green)’ : ‘var(–red)’
-}
-}, bull ? ‘^ BULLISH’ : ‘v BEARISH’)), scalp && livePrice && /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-bottom: 28,
-right: 6,
-zIndex: 10,
-pointerEvents: ‘none’,
-background: ‘rgba(7,9,15,.9)’,
-borderRadius: 8,
-padding: ‘6px 10px’,
-border: ‘1px solid var(–border)’,
-backdropFilter: ‘blur(6px)’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-fontWeight: 700,
-letterSpacing: .7,
-marginBottom: 3
-}
-}, “KEY LEVELS”), (() => {
-const isGold = pair === ‘XAU/USD’,
-isIdx = [‘US500’, ‘NAS100’, ‘GER40’, ‘UK100’, ‘JP225’, ‘AUS200’, ‘FRA40’].includes(pair);
-const isCr = [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘BNB/USD’].includes(pair);
-const step = isGold ? 5 : isIdx ? 50 : isCr ? 100 : pair.includes(‘JPY’) ? 0.5 : 0.0050;
-const r = Math.ceil(livePrice / step) * step,
-s = Math.floor(livePrice / step) * step;
-return /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 5,
-alignItems: ‘center’,
-marginBottom: 2
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-width: 5,
-height: 5,
-borderRadius: ‘50%’,
-background: ‘var(–red)’
-}
-}), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-fontWeight: 700
-}
-}, “R”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-color: ‘#f87171’,
-fontFamily: ‘monospace’,
-fontWeight: 700
-}
-}, r.toFixed(dec))), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 5,
-alignItems: ‘center’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-width: 5,
-height: 5,
-borderRadius: ‘50%’,
-background: ‘var(–green)’
-}
-}), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-fontWeight: 700
-}
-}, “S”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-color: ‘#34d399’,
-fontFamily: ‘monospace’,
-fontWeight: 700
-}
-}, s.toFixed(dec))));
-})()));
+  let {
+    pair,
+    tf,
+    livePrice,
+    tradeLines
+  } = _ref3;
+  const dec = pairDec(pair);
+  const bull = livePrice ? livePrice >= (BASE_PRICES[pair] || 1) : true;
+  const scalp = isScalp(tf);
+  const sym = TVMAP[pair] || 'FX:EURUSD';
+  const iv = TFMAP[tf] || '60';
+  const src = 'https://s3.tradingview.com/widgetembed/?frameElementId=tv_chart' + '&symbol=' + encodeURIComponent(sym) + '&interval=' + iv + '&theme=dark&style=1&locale=en' + '&enable_publishing=0&hide_top_toolbar=0' + '&allow_symbol_change=0&save_image=0&withdateranges=1' + '&studies=' + encodeURIComponent('MASimple@tv-scriptstd;length=50');
+  const eVal = parseFloat(tradeLines == null ? void 0 : tradeLines.entry);
+  const slVal = parseFloat(tradeLines == null ? void 0 : tradeLines.sl);
+  const tpVal = parseFloat(tradeLines == null ? void 0 : tradeLines.tp);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      width: '100%',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("iframe", {
+    key: sym + '_' + iv,
+    src: src,
+    style: {
+      width: '100%',
+      height: '100%',
+      border: 'none',
+      display: 'block'
+    },
+    allowFullScreen: true,
+    title: "Chart"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      left: 6,
+      zIndex: 10,
+      pointerEvents: 'none',
+      background: 'rgba(7,9,15,.9)',
+      backdropFilter: 'blur(8px)',
+      borderRadius: 8,
+      padding: '5px 10px',
+      border: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      color: 'var(--t2)'
+    }
+  }, pair), livePrice && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      fontWeight: 800,
+      color: bull ? 'var(--green)' : 'var(--red)'
+    }
+  }, livePrice.toFixed(dec)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 3,
+      padding: '1px 6px',
+      borderRadius: 4,
+      fontSize: 9,
+      fontWeight: 700,
+      background: 'rgba(16,185,129,.15)',
+      color: '#10b981',
+      letterSpacing: .5
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pulse",
+    style: {
+      width: 5,
+      height: 5,
+      borderRadius: '50%',
+      background: '#10b981',
+      display: 'inline-block'
+    }
+  }), "LIVE")), (tpVal > 0 || eVal > 0 || slVal > 0) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 6,
+      right: 6,
+      zIndex: 10,
+      pointerEvents: 'none',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 3
+    }
+  }, tpVal > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(16,185,129,.2)',
+      border: '1px solid var(--green)',
+      borderRadius: 6,
+      padding: '3px 9px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      backdropFilter: 'blur(6px)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      color: 'var(--green)',
+      letterSpacing: .5
+    }
+  }, "TP"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: '#34d399',
+      fontFamily: 'monospace'
+    }
+  }, tpVal.toFixed(dec))), eVal > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(255,255,255,.08)',
+      border: '1px solid rgba(255,255,255,.35)',
+      borderRadius: 6,
+      padding: '3px 9px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      backdropFilter: 'blur(6px)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      color: 'rgba(255,255,255,.6)',
+      letterSpacing: .5
+    }
+  }, "ENTRY"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: '#e2e8f5',
+      fontFamily: 'monospace'
+    }
+  }, eVal.toFixed(dec))), slVal > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(239,68,68,.2)',
+      border: '1px solid var(--red)',
+      borderRadius: 6,
+      padding: '3px 9px',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      backdropFilter: 'blur(6px)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      color: 'var(--red)',
+      letterSpacing: .5
+    }
+  }, "SL"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: '#f87171',
+      fontFamily: 'monospace'
+    }
+  }, slVal.toFixed(dec)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 28,
+      left: 6,
+      zIndex: 10,
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: '3px 8px',
+      borderRadius: 5,
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: .5,
+      background: bull ? 'rgba(16,185,129,.15)' : 'rgba(239,68,68,.15)',
+      color: bull ? 'var(--green)' : 'var(--red)'
+    }
+  }, bull ? '^ BULLISH' : 'v BEARISH')), scalp && livePrice && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      bottom: 28,
+      right: 6,
+      zIndex: 10,
+      pointerEvents: 'none',
+      background: 'rgba(7,9,15,.9)',
+      borderRadius: 8,
+      padding: '6px 10px',
+      border: '1px solid var(--border)',
+      backdropFilter: 'blur(6px)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      letterSpacing: .7,
+      marginBottom: 3
+    }
+  }, "KEY LEVELS"), (() => {
+    const isGold = pair === 'XAU/USD',
+      isIdx = ['US500', 'NAS100', 'GER40', 'UK100', 'JP225', 'AUS200', 'FRA40'].includes(pair);
+    const isCr = ['BTC/USD', 'ETH/USD', 'SOL/USD', 'BNB/USD'].includes(pair);
+    const step = isGold ? 5 : isIdx ? 50 : isCr ? 100 : pair.includes('JPY') ? 0.5 : 0.0050;
+    const r = Math.ceil(livePrice / step) * step,
+      s = Math.floor(livePrice / step) * step;
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 5,
+        alignItems: 'center',
+        marginBottom: 2
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 5,
+        height: 5,
+        borderRadius: '50%',
+        background: 'var(--red)'
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        color: 'var(--t3)',
+        fontWeight: 700
+      }
+    }, "R"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        color: '#f87171',
+        fontFamily: 'monospace',
+        fontWeight: 700
+      }
+    }, r.toFixed(dec))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 5,
+        alignItems: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 5,
+        height: 5,
+        borderRadius: '50%',
+        background: 'var(--green)'
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 9,
+        color: 'var(--t3)',
+        fontWeight: 700
+      }
+    }, "S"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        color: '#34d399',
+        fontFamily: 'monospace',
+        fontWeight: 700
+      }
+    }, s.toFixed(dec))));
+  })()));
 }
 
-// – CHECKLIST PANEL —————————————————––
+// -- CHECKLIST PANEL -------------------------------------------------------
 
 function ChecklistPanel(_ref4) {
-let {
-tf,
-checks,
-onToggle
-} = _ref4;
-const cat = tfCat(tf);
-const score = ITEMS.reduce((s, it) => checks[it.id] ? s + it.w[cat] : s, 0);
-const max = ITEMS.reduce((s, it) => s + it.w[cat], 0);
-const pct = Math.round(score / max * 100);
-const bull = !!checks[‘trend’];
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-flexDirection: ‘column’,
-height: ‘100%’,
-background: ‘var(–bg1)’,
-borderLeft: ‘1px solid var(–border)’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘flex-start’,
-justifyContent: ‘space-between’
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-fontWeight: 700,
-letterSpacing: 1,
-marginBottom: 2
-}
-}, “ACTIVE CHECKLIST”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 16,
-fontWeight: 700
-}
-}, tf === ‘1D’ ? ‘DAILY’ : tf === ‘1W’ ? ‘WEEKLY’ : tf)), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘right’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-marginBottom: 3
-}
-}, “confluence”), /*#**PURE***/React.createElement(Ring, {
-pct: pct,
-size: 64
-}))), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-overflowY: ‘auto’
-}
-}, ITEMS.map(it => {
-const on = !!checks[it.id];
-const w = it.w[cat];
-const dis = it.id === ‘psych’ && ![‘1D’, ‘1W’].includes(tf);
-return /*#**PURE***/React.createElement(“div”, {
-key: it.id,
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 10,
-padding: ‘8px 14px’,
-borderBottom: ‘1px solid var(–border)’,
-background: on && !dis ? ‘rgba(37,99,235,.04)’ : ‘transparent’,
-opacity: dis ? .5 : 1
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-minWidth: 0
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 12,
-fontWeight: 600,
-color: on && !dis ? ‘var(–t1)’ : ‘var(–t2)’,
-lineHeight: 1.3,
-marginBottom: 2
-}
-}, it.label), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-letterSpacing: .5,
-color: dis ? ‘var(–t3)’ : it.mode === ‘AUTO’ ? ‘var(–blue-l)’ : ‘var(–t3)’
-}
-}, dis ? ‘ENABLED ON D’ : it.mode)), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 11,
-fontWeight: 700,
-color: on && !dis ? ‘#22c55e’ : ‘var(–t3)’,
-minWidth: 30,
-textAlign: ‘right’
-}
-}, “+”, w, “%”), /*#**PURE***/React.createElement(Toggle, {
-checked: on && !dis,
-onChange: v => !dis && onToggle(it.id, v)
-}));
-})), /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘8px 14px’,
-borderTop: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-display: ‘inline-flex’,
-alignItems: ‘center’,
-gap: 4,
-padding: ‘3px 8px’,
-borderRadius: 5,
-fontSize: 10,
-fontWeight: 700,
-letterSpacing: .5,
-background: bull ? ‘rgba(16,185,129,.1)’ : ‘rgba(239,68,68,.1)’,
-color: bull ? ‘var(–green)’ : ‘var(–red)’
-}
-}, bull ? ‘^ BULLISH’ : ‘v BEARISH’), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginLeft: ‘auto’
-}
-}, score, “/”, max)));
+  let {
+    tf,
+    checks,
+    onToggle
+  } = _ref4;
+  const cat = tfCat(tf);
+  const score = ITEMS.reduce((s, it) => checks[it.id] ? s + it.w[cat] : s, 0);
+  const max = ITEMS.reduce((s, it) => s + it.w[cat], 0);
+  const pct = Math.round(score / max * 100);
+  const bull = !!checks['trend'];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      background: 'var(--bg1)',
+      borderLeft: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      letterSpacing: 1,
+      marginBottom: 2
+    }
+  }, "ACTIVE CHECKLIST"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 16,
+      fontWeight: 700
+    }
+  }, tf === '1D' ? 'DAILY' : tf === '1W' ? 'WEEKLY' : tf)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      marginBottom: 3
+    }
+  }, "confluence"), /*#__PURE__*/React.createElement(Ring, {
+    pct: pct,
+    size: 64
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: 'auto'
+    }
+  }, ITEMS.map(it => {
+    const on = !!checks[it.id];
+    const w = it.w[cat];
+    const dis = it.id === 'psych' && !['1D', '1W'].includes(tf);
+    return /*#__PURE__*/React.createElement("div", {
+      key: it.id,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '8px 14px',
+        borderBottom: '1px solid var(--border)',
+        background: on && !dis ? 'rgba(37,99,235,.04)' : 'transparent',
+        opacity: dis ? .5 : 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 600,
+        color: on && !dis ? 'var(--t1)' : 'var(--t2)',
+        lineHeight: 1.3,
+        marginBottom: 2
+      }
+    }, it.label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: .5,
+        color: dis ? 'var(--t3)' : it.mode === 'AUTO' ? 'var(--blue-l)' : 'var(--t3)'
+      }
+    }, dis ? 'ENABLED ON D' : it.mode)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: on && !dis ? '#22c55e' : 'var(--t3)',
+        minWidth: 30,
+        textAlign: 'right'
+      }
+    }, "+", w, "%"), /*#__PURE__*/React.createElement(Toggle, {
+      checked: on && !dis,
+      onChange: v => !dis && onToggle(it.id, v)
+    }));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 14px',
+      borderTop: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: '3px 8px',
+      borderRadius: 5,
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: .5,
+      background: bull ? 'rgba(16,185,129,.1)' : 'rgba(239,68,68,.1)',
+      color: bull ? 'var(--green)' : 'var(--red)'
+    }
+  }, bull ? '^ BULLISH' : 'v BEARISH'), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginLeft: 'auto'
+    }
+  }, score, "/", max)));
 }
 
-// – SESSIONS PANEL ––––––––––––––––––––––––––––
+// -- SESSIONS PANEL --------------------------------------------------------
 
 function SessionsPanel(_ref5) {
-let {
-sessions,
-utc,
-mktOpen
-} = _ref5;
-return /*#**PURE***/React.createElement(“div”, {
-className: “card”
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘space-between’
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontWeight: 700,
-fontSize: 13
-}
-}, “Live Sessions”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontFamily: ‘monospace’
-}
-}, utc)), /*#**PURE***/React.createElement(“span”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 4,
-padding: ‘3px 8px’,
-borderRadius: 5,
-fontSize: 9,
-fontWeight: 700,
-letterSpacing: .5,
-background: mktOpen ? ‘rgba(16,185,129,.1)’ : ‘rgba(239,68,68,.1)’,
-color: mktOpen ? ‘var(–green)’ : ‘var(–red)’
-}
-}, mktOpen && /*#**PURE***/React.createElement(“span”, {
-className: “pulse”,
-style: {
-width: 5,
-height: 5,
-borderRadius: ‘50%’,
-background: ‘var(–green)’,
-display: ‘inline-block’
-}
-}), mktOpen ? ‘MARKET OPEN’ : ‘MARKET CLOSED’)), sessions.map(s => /*#**PURE***/React.createElement(“div”, {
-key: s.n,
-style: {
-padding: ‘8px 14px’,
-borderLeft: s.act ? ‘3px solid var(–green)’ : ‘3px solid transparent’,
-background: s.act ? ‘rgba(16,185,129,.04)’ : ‘transparent’,
-marginBottom: 2
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 15
-}
-}, s.icon), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-marginBottom: 1
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 600,
-fontSize: 13,
-color: s.act ? ‘var(–t1)’ : ‘var(–t2)’
-}
-}, s.n), s.act && /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-padding: ‘1px 5px’,
-borderRadius: 3,
-background: ‘rgba(16,185,129,.15)’,
-color: ‘var(–green)’,
-letterSpacing: .5
-}
-}, “ACTIVE”)), s.act && s.rem > 0 ? /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 3
-}
-}, “Time remaining”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 17,
-fontWeight: 800,
-color: ‘var(–green)’,
-fontFamily: ‘monospace’
-}
-}, fmtSecs(s.rem)), /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 3,
-background: ‘var(–bg4)’,
-borderRadius: 2,
-marginTop: 5,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: ‘100%’,
-width: `${s.prog}%`,
-background: ‘var(–green)’,
-transition: ‘width 1s’
-}
-}))) : /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-color: ‘var(–t3)’
-}
-}, String(s.s).padStart(2, ‘0’), “:00 \u2013 “, String(s.e).padStart(2, ‘0’), “:00 UTC”))))));
+  let {
+    sessions,
+    utc,
+    mktOpen
+  } = _ref5;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13
+    }
+  }, "Live Sessions"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontFamily: 'monospace'
+    }
+  }, utc)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: '3px 8px',
+      borderRadius: 5,
+      fontSize: 9,
+      fontWeight: 700,
+      letterSpacing: .5,
+      background: mktOpen ? 'rgba(16,185,129,.1)' : 'rgba(239,68,68,.1)',
+      color: mktOpen ? 'var(--green)' : 'var(--red)'
+    }
+  }, mktOpen && /*#__PURE__*/React.createElement("span", {
+    className: "pulse",
+    style: {
+      width: 5,
+      height: 5,
+      borderRadius: '50%',
+      background: 'var(--green)',
+      display: 'inline-block'
+    }
+  }), mktOpen ? 'MARKET OPEN' : 'MARKET CLOSED')), sessions.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.n,
+    style: {
+      padding: '8px 14px',
+      borderLeft: s.act ? '3px solid var(--green)' : '3px solid transparent',
+      background: s.act ? 'rgba(16,185,129,.04)' : 'transparent',
+      marginBottom: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 15
+    }
+  }, s.icon), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 1
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 600,
+      fontSize: 13,
+      color: s.act ? 'var(--t1)' : 'var(--t2)'
+    }
+  }, s.n), s.act && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      padding: '1px 5px',
+      borderRadius: 3,
+      background: 'rgba(16,185,129,.15)',
+      color: 'var(--green)',
+      letterSpacing: .5
+    }
+  }, "ACTIVE")), s.act && s.rem > 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 3
+    }
+  }, "Time remaining"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 17,
+      fontWeight: 800,
+      color: 'var(--green)',
+      fontFamily: 'monospace'
+    }
+  }, fmtSecs(s.rem)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 3,
+      background: 'var(--bg4)',
+      borderRadius: 2,
+      marginTop: 5,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      width: `${s.prog}%`,
+      background: 'var(--green)',
+      transition: 'width 1s'
+    }
+  }))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--t3)'
+    }
+  }, String(s.s).padStart(2, '0'), ":00 \u2013 ", String(s.e).padStart(2, '0'), ":00 UTC"))))));
 }
 
-// – TRADE FORM ————————————————————
+// -- TRADE FORM ------------------------------------------------------------
 
 function TradeForm(_ref6) {
-var _pred$entry, _pred$sl, _pred$tp;
-let {
-pair,
-tf,
-livePrice,
-checks,
-onTradeChange
-} = _ref6;
-const [acc, setAcc] = useState(1);
-const [dir, setDir] = useState(‘BUY’);
-const [bal, setBal] = useState(’’);
-const [sl, setSl] = useState(’’);
-const [tp, setTp] = useState(’’);
-const [entry, setEntry] = useState(’’);
-const [rPct, setRPct] = useState(‘1’);
-const [pred, setPred] = useState(null);
-const [loading, setLoading] = useState(false);
-const dec = pairDec(pair);
-const scalp = isScalp(tf);
-const cfg = PIP_CFG[pair] || {
-pip: 0.0001,
-pv: 10
-};
-useEffect(() => {
-if (onTradeChange) onTradeChange({
-entry,
-sl,
-tp,
-dir
-});
-}, [entry, sl, tp, dir]);
-const lots = useMemo(() => {
-if (!bal || !rPct || !entry || !sl) return 0;
-const ra = parseFloat(bal) * (parseFloat(rPct) / 100);
-const pips = Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip;
-return pips ? ra / (pips * cfg.pv) : 0;
-}, [bal, rPct, entry, sl]);
-const rr = useMemo(() => {
-if (!entry || !sl || !tp) return 0;
-const r = Math.abs(parseFloat(entry) - parseFloat(sl));
-const rew = Math.abs(parseFloat(tp) - parseFloat(entry));
-return r ? rew / r : 0;
-}, [entry, sl, tp]);
-const riskUSD = (parseFloat(bal) || 0) * (parseFloat(rPct) || 0) / 100;
-const slPips = entry && sl ? (Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip).toFixed(1) : ‘-’;
-async function runPredict() {
-if (!livePrice) return;
-setLoading(true);
-setPred(null);
-const activeSignals = Object.entries(checks).filter(_ref7 => {
-let [, v] = _ref7;
-return v;
-}).map(_ref8 => {
-let [k] = _ref8;
-const it = ITEMS.find(x => x.id === k);
-return it ? it.label : ‘’;
-}).filter(Boolean).join(’, ’);
-const tfMult = {
-‘1m’: 0.06,
-‘3m’: 0.12,
-‘5m’: 0.18,
-‘15m’: 0.28,
-‘30m’: 0.42,
-‘45m’: 0.52,
-‘1H’: 0.7,
-‘2H’: 1.0,
-‘4H’: 1.5,
-‘1D’: 3.2,
-‘1W’: 6.5
-};
-const atr = (TICK_VOL[pair] || 0.0001) * 60 * (tfMult[tf] || 1);
-const isBuy = checks.trend !== false;
-const fmtP = v => parseFloat(v).toFixed(dec);
-try {
-var _data$content;
-const prompt = ‘You are ATHENA trading AI.\nPAIR:’ + pair + ‘\nTF:’ + tf + ‘\nPRICE:’ + livePrice + ‘\nTREND:’ + (checks.trend ? ‘BULLISH’ : ‘BEARISH’) + ‘\nSIGNALS:’ + activeSignals + ‘\nATR:’ + atr.toFixed(dec) + ‘\n’ + (scalp ? ‘SCALP mode: tight SL/TP’ : ‘SWING mode: wider SL/TP’) + ‘\n\nReply ONLY with JSON:{“direction”:“BUY”,“entry”:’ + livePrice + ‘,“sl”:0,“tp”:0,“tp2”:0,“rr”:1.5,“rationale”:“brief analysis”,“confidence”:70,“setup_quality”:“B”}’;
-const res = await fetch(‘https://api.anthropic.com/v1/messages’, {
-method: ‘POST’,
-headers: {
-‘Content-Type’: ‘application/json’
-},
-body: JSON.stringify({
-model: ‘claude-sonnet-4-20250514’,
-max_tokens: 300,
-messages: [{
-role: ‘user’,
-content: prompt
-}]
-})
-});
-const data = await res.json();
-const text = ((_data$content = data.content) == null || (_data$content = _data$content.find(b => b.type === ‘text’)) == null ? void 0 : _data$content.text) || ‘’;
-const p = JSON.parse(text.replace(/`json|`/g, ‘’).trim());
-setDir(p.direction || dir);
-setEntry(fmtP(p.entry || livePrice));
-setSl(fmtP(p.sl));
-setTp(fmtP(p.tp));
-setPred(p);
-if (onTradeChange) onTradeChange({
-entry: String(p.entry || ‘’),
-sl: String(p.sl || ‘’),
-tp: String(p.tp || ‘’),
-dir: p.direction || ‘BUY’
-});
-} catch {
-const slM = scalp ? .8 : 1.2,
-tpM = scalp ? 1.5 : 2.0;
-const e = parseFloat(fmtP(livePrice));
-const s = parseFloat(fmtP(isBuy ? livePrice - atr * slM : livePrice + atr * slM));
-const t = parseFloat(fmtP(isBuy ? livePrice + atr * tpM : livePrice - atr * tpM));
-const t2 = parseFloat(fmtP(isBuy ? livePrice + atr * (tpM * 1.7) : livePrice - atr * (tpM * 1.7)));
-const rrC = parseFloat((Math.abs(t - e) / Math.abs(s - e)).toFixed(2));
-const p2 = {
-direction: isBuy ? ‘BUY’ : ‘SELL’,
-entry: e,
-sl: s,
-tp: t,
-tp2: t2,
-rr: rrC,
-rationale: (scalp ? ‘Scalp setup’ : ‘Swing setup’) + ’ on ’ + tf + ‘. ’ + (isBuy ? ‘Bullish’ : ‘Bearish’) + ’ bias. ATR-based levels.’,
-confidence: Math.min(85, 35 + Object.values(checks).filter(Boolean).length * 8),
-setup_quality: Object.values(checks).filter(Boolean).length >= 4 ? ‘A’ : Object.values(checks).filter(Boolean).length >= 3 ? ‘B’ : ‘C’
-};
-setDir(p2.direction);
-setEntry(fmtP(p2.entry));
-setSl(fmtP(p2.sl));
-setTp(fmtP(p2.tp));
-setPred(p2);
-if (onTradeChange) onTradeChange({
-entry: String(p2.entry || ‘’),
-sl: String(p2.sl || ‘’),
-tp: String(p2.tp || ‘’),
-dir: p2.direction
-});
-}
-setLoading(false);
-}
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-flexDirection: ‘column’,
-gap: 12,
-maxWidth: 520
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘linear-gradient(135deg,rgba(37,99,235,.08),rgba(168,85,247,.08))’,
-border: ‘2px solid rgba(168,85,247,.35)’,
-borderRadius: 12,
-padding: 12
-}
-}, /*#**PURE***/React.createElement(“button”, {
-onClick: runPredict,
-disabled: loading,
-style: {
-width: ‘100%’,
-padding: ‘12px’,
-borderRadius: 9,
-border: ‘none’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontWeight: 800,
-fontSize: 14,
-letterSpacing: .3,
-background: loading ? ‘var(–bg4)’ : ‘linear-gradient(135deg,#1d4ed8,#7c3aed)’,
-color: loading ? ‘var(–t3)’ : ‘#fff’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-gap: 8,
-transition: ‘all .2s’,
-opacity: loading ? .6 : 1,
-boxShadow: loading ? ‘none’ : ‘0 4px 16px rgba(124,58,237,.35)’,
-marginBottom: pred ? 10 : 0
-}
-}, loading ? /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“span”, {
-style: {
-width: 14,
-height: 14,
-border: ‘2px solid rgba(255,255,255,.3)’,
-borderTop: ‘2px solid #fff’,
-borderRadius: ‘50%’,
-animation: ‘spin .7s linear infinite’,
-display: ‘inline-block’
-}
-}), “ Analyzing…”) : /*#**PURE***/React.createElement(React.Fragment, null, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 16
-}
-}, “\u2295”), “ ATHENA AI PREDICT \xB7 “, tf, “ “, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 11,
-opacity: .8
-}
-}, scalp ? ‘SCALP’ : ‘SWING’))), pred && /*#**PURE***/React.createElement(“div”, {
-style: {
-animation: ‘fi .3s ease’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 6,
-marginBottom: 8
-}
-}, [{
-l: ‘QUALITY’,
-v: pred.setup_quality,
-c: pred.setup_quality === ‘A’ ? ‘var(–green)’ : pred.setup_quality === ‘B’ ? ‘var(–gold)’ : ‘var(–red)’
-}, {
-l: ‘CONFIDENCE’,
-v: pred.confidence + ‘%’,
-c: ‘var(–purple)’
-}, {
-l: ‘R:R’,
-v: ‘1:’ + parseFloat(pred.rr).toFixed(1),
-c: ‘var(–green)’
-}].map(_ref9 => {
-let {
-l,
-v,
-c
-} = _ref9;
-return /*#**PURE***/React.createElement(“div”, {
-key: l,
-style: {
-flex: 1,
-background: ‘var(–bg3)’,
-borderRadius: 8,
-padding: ‘7px 8px’,
-border: ‘1px solid var(–border2)’,
-textAlign: ‘center’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 8,
-color: ‘var(–t3)’,
-marginBottom: 2,
-fontWeight: 700
-}
-}, l), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 18,
-fontWeight: 900,
-color: c
-}
-}, v));
-})), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘grid’,
-gridTemplateColumns: ‘1fr 1fr 1fr’,
-gap: 6,
-marginBottom: 8
-}
-}, [{
-l: ‘ENTRY’,
-v: (_pred$entry = pred.entry) == null ? void 0 : _pred$entry.toFixed(dec),
-c: ‘#e2e8f5’,
-bg: ‘rgba(255,255,255,.04)’
-}, {
-l: ‘STOP LOSS’,
-v: (_pred$sl = pred.sl) == null ? void 0 : _pred$sl.toFixed(dec),
-c: ‘#f87171’,
-bg: ‘rgba(239,68,68,.08)’
-}, {
-l: ‘TAKE PROFIT’,
-v: (_pred$tp = pred.tp) == null ? void 0 : _pred$tp.toFixed(dec),
-c: ‘#34d399’,
-bg: ‘rgba(16,185,129,.08)’
-}].map(_ref0 => {
-let {
-l,
-v,
-c,
-bg
-} = _ref0;
-return /*#**PURE***/React.createElement(“div”, {
-key: l,
-style: {
-background: bg,
-borderRadius: 7,
-padding: ‘7px 8px’,
-textAlign: ‘center’,
-border: `1px solid ${c}22`
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 8,
-color: ‘var(–t3)’,
-fontWeight: 700,
-letterSpacing: .5,
-marginBottom: 2
-}
-}, l), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-fontWeight: 800,
-color: c,
-fontFamily: ‘monospace’
-}
-}, v));
-})), /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘rgba(168,85,247,.07)’,
-borderRadius: 8,
-padding: ‘8px 10px’,
-border: ‘1px solid rgba(168,85,247,.2)’,
-fontSize: 11,
-color: ‘var(–t2)’,
-lineHeight: 1.55
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-color: ‘var(–purple)’,
-display: ‘block’,
-marginBottom: 2
-}
-}, “\u2295 ATHENA”), pred.rationale))), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontWeight: 700,
-marginBottom: 6,
-letterSpacing: .5
-}
-}, “ACCOUNT”), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 6
-}
-}, [1, 2, 3].map(n => /*#**PURE***/React.createElement(“button”, {
-key: n,
-onClick: () => setAcc(n),
-style: {
-flex: 1,
-padding: ‘8px’,
-borderRadius: 8,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontWeight: 600,
-fontSize: 13,
-transition: ‘all .15s’,
-border: `1px solid ${acc === n ? 'var(--blue-l)' : 'var(--border2)'}`,
-background: acc === n ? ‘var(–blue-dim)’ : ‘var(–bg3)’,
-color: acc === n ? ‘var(–blue-l)’ : ‘var(–t2)’
-}
-}, “Account “, n)))), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontWeight: 700,
-marginBottom: 6,
-letterSpacing: .5
-}
-}, “DIRECTION”), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 6
-}
-}, /*#**PURE***/React.createElement(“button”, {
-onClick: () => setDir(‘BUY’),
-style: {
-flex: 1,
-padding: ‘10px’,
-borderRadius: 8,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontWeight: 800,
-fontSize: 14,
-transition: ‘all .15s’,
-border: `2px solid ${dir === 'BUY' ? 'var(--green)' : 'var(--border2)'}`,
-background: dir === ‘BUY’ ? ‘var(–green-dim)’ : ‘var(–bg3)’,
-color: dir === ‘BUY’ ? ‘var(–green)’ : ‘var(–t2)’
-}
-}, “\u25B2 BUY”), /*#**PURE***/React.createElement(“button”, {
-onClick: () => setDir(‘SELL’),
-style: {
-flex: 1,
-padding: ‘10px’,
-borderRadius: 8,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontWeight: 800,
-fontSize: 14,
-transition: ‘all .15s’,
-border: `2px solid ${dir === 'SELL' ? 'var(--red)' : 'var(--border2)'}`,
-background: dir === ‘SELL’ ? ‘var(–red-dim)’ : ‘var(–bg3)’,
-color: dir === ‘SELL’ ? ‘var(–red)’ : ‘var(–t2)’
-}
-}, “\u25BC SELL”))), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontWeight: 700,
-marginBottom: 6,
-letterSpacing: .5
-}
-}, “ACCOUNT BALANCE (USD)”), /*#**PURE***/React.createElement(“input”, {
-className: “input”,
-type: “number”,
-placeholder: “e.g. 10000”,
-value: bal,
-onChange: e => setBal(e.target.value)
-})), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontWeight: 700,
-marginBottom: 8,
-letterSpacing: .5
-}
-}, “TRADE PARAMETERS”), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘grid’,
-gridTemplateColumns: ‘1fr 1fr’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 4
-}
-}, “Stop Loss *”), /*#**PURE***/React.createElement(“input”, {
-className: “input”,
-type: “number”,
-step: “0.00001”,
-placeholder: “0.00”,
-value: sl,
-onChange: e => setSl(e.target.value)
-})), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 4
-}
-}, “Take Profit *”), /*#**PURE***/React.createElement(“input”, {
-className: “input”,
-type: “number”,
-step: “0.00001”,
-placeholder: “0.00”,
-value: tp,
-onChange: e => setTp(e.target.value)
-})), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 4
-}
-}, “Entry Price *”), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’
-}
-}, /*#**PURE***/React.createElement(“input”, {
-className: “input”,
-type: “number”,
-step: “0.00001”,
-placeholder: “0.00”,
-value: entry,
-onChange: e => setEntry(e.target.value),
-style: {
-paddingRight: 60
-}
-}), livePrice && /*#**PURE***/React.createElement(“button”, {
-onClick: () => setEntry(livePrice.toFixed(dec)),
-style: {
-position: ‘absolute’,
-right: 0,
-top: 0,
-bottom: 0,
-padding: ‘0 8px’,
-background: ‘var(–blue-dim)’,
-border: ‘none’,
-borderLeft: ‘1px solid var(–border2)’,
-borderRadius: ‘0 7px 7px 0’,
-color: ‘var(–blue-l)’,
-fontSize: 10,
-fontWeight: 700,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’
-}
-}, “LIVE”))), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 4
-}
-}, “Risk % *”), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’
-}
-}, /*#**PURE***/React.createElement(“input”, {
-className: “input”,
-type: “number”,
-step: “0.1”,
-min: “0.1”,
-max: “10”,
-placeholder: “1”,
-value: rPct,
-onChange: e => setRPct(e.target.value),
-style: {
-paddingRight: 44
-}
-}), /*#**PURE***/React.createElement(“span”, {
-style: {
-position: ‘absolute’,
-right: 0,
-top: 0,
-bottom: 0,
-display: ‘flex’,
-alignItems: ‘center’,
-paddingRight: 8,
-paddingLeft: 6,
-fontSize: 10,
-fontWeight: 700,
-color: ‘var(–blue-l)’,
-background: ‘var(–blue-dim)’,
-borderRadius: ‘0 7px 7px 0’,
-borderLeft: ‘1px solid var(–border2)’
-}
-}, “USD”))))), /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘var(–bg3)’,
-border: `1px solid ${lots > 0 ? 'var(--blue-l)' : 'var(--border2)'}`,
-borderRadius: 10,
-padding: 12,
-transition: ‘border .3s’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-fontWeight: 700,
-letterSpacing: .7,
-marginBottom: 8
-}
-}, “POSITION SIZE”), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-alignItems: ‘flex-end’,
-justifyContent: ‘space-between’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-marginBottom: 2
-}
-}, “Lot Size”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 34,
-fontWeight: 800,
-color: lots > 0 ? ‘var(–blue-l)’ : ‘var(–t3)’,
-lineHeight: 1,
-fontFamily: ‘monospace’
-}
-}, lots > 0 ? lots.toFixed(2) : ‘-’), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-marginTop: 2
-}
-}, “standard lots”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘right’,
-display: ‘flex’,
-flexDirection: ‘column’,
-gap: 4
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’
-}
-}, “Risk Amount”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 14,
-fontWeight: 700,
-color: ‘var(–red)’,
-fontFamily: ‘monospace’
-}
-}, riskUSD > 0 ? ‘$’ + riskUSD.toFixed(2) : ‘-’)), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’
-}
-}, “SL Distance”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 12,
-fontWeight: 700,
-color: ‘var(–t2)’,
-fontFamily: ‘monospace’
-}
-}, slPips, “ pips”))), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘right’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’
-}
-}, “R:R”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 20,
-fontWeight: 800,
-color: rr >= 2 ? ‘var(–green)’ : rr >= 1 ? ‘var(–gold)’ : ‘var(–red)’,
-fontFamily: ‘monospace’
-}
-}, rr > 0 ? ‘1:’ + rr.toFixed(1) : ‘-’))), lots > 0 && /*#**PURE***/React.createElement(“div”, {
-style: {
-marginTop: 8,
-padding: ‘6px 10px’,
-borderRadius: 7,
-fontSize: 12,
-fontWeight: 600,
-background: dir === ‘BUY’ ? ‘var(–green-dim)’ : ‘var(–red-dim)’,
-color: dir === ‘BUY’ ? ‘var(–green)’ : ‘var(–red)’,
-border: `1px solid ${dir === 'BUY' ? 'rgba(16,185,129,.25)' : 'rgba(239,68,68,.25)'}`
-}
-}, dir === ‘BUY’ ? ‘^’ : ‘v’, “ “, dir, “ “, /*#**PURE***/React.createElement(“strong”, null, lots.toFixed(2)), “ lots \xB7 “, pair, “ \xB7 Risk $”, riskUSD.toFixed(2))));
+  var _pred$entry, _pred$sl, _pred$tp;
+  let {
+    pair,
+    tf,
+    livePrice,
+    checks,
+    onTradeChange
+  } = _ref6;
+  const [acc, setAcc] = useState(1);
+  const [dir, setDir] = useState('BUY');
+  const [bal, setBal] = useState('');
+  const [sl, setSl] = useState('');
+  const [tp, setTp] = useState('');
+  const [entry, setEntry] = useState('');
+  const [rPct, setRPct] = useState('1');
+  const [pred, setPred] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const dec = pairDec(pair);
+  const scalp = isScalp(tf);
+  const cfg = PIP_CFG[pair] || {
+    pip: 0.0001,
+    pv: 10
+  };
+  useEffect(() => {
+    if (onTradeChange) onTradeChange({
+      entry,
+      sl,
+      tp,
+      dir
+    });
+  }, [entry, sl, tp, dir]);
+  const lots = useMemo(() => {
+    if (!bal || !rPct || !entry || !sl) return 0;
+    const ra = parseFloat(bal) * (parseFloat(rPct) / 100);
+    const pips = Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip;
+    return pips ? ra / (pips * cfg.pv) : 0;
+  }, [bal, rPct, entry, sl]);
+  const rr = useMemo(() => {
+    if (!entry || !sl || !tp) return 0;
+    const r = Math.abs(parseFloat(entry) - parseFloat(sl));
+    const rew = Math.abs(parseFloat(tp) - parseFloat(entry));
+    return r ? rew / r : 0;
+  }, [entry, sl, tp]);
+  const riskUSD = (parseFloat(bal) || 0) * (parseFloat(rPct) || 0) / 100;
+  const slPips = entry && sl ? (Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip).toFixed(1) : '-';
+  async function runPredict() {
+    if (!livePrice) return;
+    setLoading(true);
+    setPred(null);
+    const activeSignals = Object.entries(checks).filter(_ref7 => {
+      let [, v] = _ref7;
+      return v;
+    }).map(_ref8 => {
+      let [k] = _ref8;
+      const it = ITEMS.find(x => x.id === k);
+      return it ? it.label : '';
+    }).filter(Boolean).join(', ');
+    const tfMult = {
+      '1m': 0.06,
+      '3m': 0.12,
+      '5m': 0.18,
+      '15m': 0.28,
+      '30m': 0.42,
+      '45m': 0.52,
+      '1H': 0.7,
+      '2H': 1.0,
+      '4H': 1.5,
+      '1D': 3.2,
+      '1W': 6.5
+    };
+    const atr = (TICK_VOL[pair] || 0.0001) * 60 * (tfMult[tf] || 1);
+    const isBuy = checks.trend !== false;
+    const fmtP = v => parseFloat(v).toFixed(dec);
+    try {
+      var _data$content;
+      const prompt = 'You are ATHENA trading AI.\nPAIR:' + pair + '\nTF:' + tf + '\nPRICE:' + livePrice + '\nTREND:' + (checks.trend ? 'BULLISH' : 'BEARISH') + '\nSIGNALS:' + activeSignals + '\nATR:' + atr.toFixed(dec) + '\n' + (scalp ? 'SCALP mode: tight SL/TP' : 'SWING mode: wider SL/TP') + '\n\nReply ONLY with JSON:{"direction":"BUY","entry":' + livePrice + ',"sl":0,"tp":0,"tp2":0,"rr":1.5,"rationale":"brief analysis","confidence":70,"setup_quality":"B"}';
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 300,
+          messages: [{
+            role: 'user',
+            content: prompt
+          }]
+        })
+      });
+      const data = await res.json();
+      const text = ((_data$content = data.content) == null || (_data$content = _data$content.find(b => b.type === 'text')) == null ? void 0 : _data$content.text) || '';
+      const p = JSON.parse(text.replace(/```json|```/g, '').trim());
+      setDir(p.direction || dir);
+      setEntry(fmtP(p.entry || livePrice));
+      setSl(fmtP(p.sl));
+      setTp(fmtP(p.tp));
+      setPred(p);
+      if (onTradeChange) onTradeChange({
+        entry: String(p.entry || ''),
+        sl: String(p.sl || ''),
+        tp: String(p.tp || ''),
+        dir: p.direction || 'BUY'
+      });
+    } catch {
+      const slM = scalp ? .8 : 1.2,
+        tpM = scalp ? 1.5 : 2.0;
+      const e = parseFloat(fmtP(livePrice));
+      const s = parseFloat(fmtP(isBuy ? livePrice - atr * slM : livePrice + atr * slM));
+      const t = parseFloat(fmtP(isBuy ? livePrice + atr * tpM : livePrice - atr * tpM));
+      const t2 = parseFloat(fmtP(isBuy ? livePrice + atr * (tpM * 1.7) : livePrice - atr * (tpM * 1.7)));
+      const rrC = parseFloat((Math.abs(t - e) / Math.abs(s - e)).toFixed(2));
+      const p2 = {
+        direction: isBuy ? 'BUY' : 'SELL',
+        entry: e,
+        sl: s,
+        tp: t,
+        tp2: t2,
+        rr: rrC,
+        rationale: (scalp ? 'Scalp setup' : 'Swing setup') + ' on ' + tf + '. ' + (isBuy ? 'Bullish' : 'Bearish') + ' bias. ATR-based levels.',
+        confidence: Math.min(85, 35 + Object.values(checks).filter(Boolean).length * 8),
+        setup_quality: Object.values(checks).filter(Boolean).length >= 4 ? 'A' : Object.values(checks).filter(Boolean).length >= 3 ? 'B' : 'C'
+      };
+      setDir(p2.direction);
+      setEntry(fmtP(p2.entry));
+      setSl(fmtP(p2.sl));
+      setTp(fmtP(p2.tp));
+      setPred(p2);
+      if (onTradeChange) onTradeChange({
+        entry: String(p2.entry || ''),
+        sl: String(p2.sl || ''),
+        tp: String(p2.tp || ''),
+        dir: p2.direction
+      });
+    }
+    setLoading(false);
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12,
+      maxWidth: 520
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'linear-gradient(135deg,rgba(37,99,235,.08),rgba(168,85,247,.08))',
+      border: '2px solid rgba(168,85,247,.35)',
+      borderRadius: 12,
+      padding: 12
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: runPredict,
+    disabled: loading,
+    style: {
+      width: '100%',
+      padding: '12px',
+      borderRadius: 9,
+      border: 'none',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontWeight: 800,
+      fontSize: 14,
+      letterSpacing: .3,
+      background: loading ? 'var(--bg4)' : 'linear-gradient(135deg,#1d4ed8,#7c3aed)',
+      color: loading ? 'var(--t3)' : '#fff',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      transition: 'all .2s',
+      opacity: loading ? .6 : 1,
+      boxShadow: loading ? 'none' : '0 4px 16px rgba(124,58,237,.35)',
+      marginBottom: pred ? 10 : 0
+    }
+  }, loading ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 14,
+      height: 14,
+      border: '2px solid rgba(255,255,255,.3)',
+      borderTop: '2px solid #fff',
+      borderRadius: '50%',
+      animation: 'spin .7s linear infinite',
+      display: 'inline-block'
+    }
+  }), " Analyzing...") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\u2295"), " ATHENA AI PREDICT \xB7 ", tf, " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      opacity: .8
+    }
+  }, scalp ? 'SCALP' : 'SWING'))), pred && /*#__PURE__*/React.createElement("div", {
+    style: {
+      animation: 'fi .3s ease'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6,
+      marginBottom: 8
+    }
+  }, [{
+    l: 'QUALITY',
+    v: pred.setup_quality,
+    c: pred.setup_quality === 'A' ? 'var(--green)' : pred.setup_quality === 'B' ? 'var(--gold)' : 'var(--red)'
+  }, {
+    l: 'CONFIDENCE',
+    v: pred.confidence + '%',
+    c: 'var(--purple)'
+  }, {
+    l: 'R:R',
+    v: '1:' + parseFloat(pred.rr).toFixed(1),
+    c: 'var(--green)'
+  }].map(_ref9 => {
+    let {
+      l,
+      v,
+      c
+    } = _ref9;
+    return /*#__PURE__*/React.createElement("div", {
+      key: l,
+      style: {
+        flex: 1,
+        background: 'var(--bg3)',
+        borderRadius: 8,
+        padding: '7px 8px',
+        border: '1px solid var(--border2)',
+        textAlign: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 8,
+        color: 'var(--t3)',
+        marginBottom: 2,
+        fontWeight: 700
+      }
+    }, l), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 18,
+        fontWeight: 900,
+        color: c
+      }
+    }, v));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: 6,
+      marginBottom: 8
+    }
+  }, [{
+    l: 'ENTRY',
+    v: (_pred$entry = pred.entry) == null ? void 0 : _pred$entry.toFixed(dec),
+    c: '#e2e8f5',
+    bg: 'rgba(255,255,255,.04)'
+  }, {
+    l: 'STOP LOSS',
+    v: (_pred$sl = pred.sl) == null ? void 0 : _pred$sl.toFixed(dec),
+    c: '#f87171',
+    bg: 'rgba(239,68,68,.08)'
+  }, {
+    l: 'TAKE PROFIT',
+    v: (_pred$tp = pred.tp) == null ? void 0 : _pred$tp.toFixed(dec),
+    c: '#34d399',
+    bg: 'rgba(16,185,129,.08)'
+  }].map(_ref0 => {
+    let {
+      l,
+      v,
+      c,
+      bg
+    } = _ref0;
+    return /*#__PURE__*/React.createElement("div", {
+      key: l,
+      style: {
+        background: bg,
+        borderRadius: 7,
+        padding: '7px 8px',
+        textAlign: 'center',
+        border: `1px solid ${c}22`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 8,
+        color: 'var(--t3)',
+        fontWeight: 700,
+        letterSpacing: .5,
+        marginBottom: 2
+      }
+    }, l), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        fontWeight: 800,
+        color: c,
+        fontFamily: 'monospace'
+      }
+    }, v));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'rgba(168,85,247,.07)',
+      borderRadius: 8,
+      padding: '8px 10px',
+      border: '1px solid rgba(168,85,247,.2)',
+      fontSize: 11,
+      color: 'var(--t2)',
+      lineHeight: 1.55
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      color: 'var(--purple)',
+      display: 'block',
+      marginBottom: 2
+    }
+  }, "\u2295 ATHENA"), pred.rationale))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      marginBottom: 6,
+      letterSpacing: .5
+    }
+  }, "ACCOUNT"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6
+    }
+  }, [1, 2, 3].map(n => /*#__PURE__*/React.createElement("button", {
+    key: n,
+    onClick: () => setAcc(n),
+    style: {
+      flex: 1,
+      padding: '8px',
+      borderRadius: 8,
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontWeight: 600,
+      fontSize: 13,
+      transition: 'all .15s',
+      border: `1px solid ${acc === n ? 'var(--blue-l)' : 'var(--border2)'}`,
+      background: acc === n ? 'var(--blue-dim)' : 'var(--bg3)',
+      color: acc === n ? 'var(--blue-l)' : 'var(--t2)'
+    }
+  }, "Account ", n)))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      marginBottom: 6,
+      letterSpacing: .5
+    }
+  }, "DIRECTION"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDir('BUY'),
+    style: {
+      flex: 1,
+      padding: '10px',
+      borderRadius: 8,
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontWeight: 800,
+      fontSize: 14,
+      transition: 'all .15s',
+      border: `2px solid ${dir === 'BUY' ? 'var(--green)' : 'var(--border2)'}`,
+      background: dir === 'BUY' ? 'var(--green-dim)' : 'var(--bg3)',
+      color: dir === 'BUY' ? 'var(--green)' : 'var(--t2)'
+    }
+  }, "\u25B2 BUY"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setDir('SELL'),
+    style: {
+      flex: 1,
+      padding: '10px',
+      borderRadius: 8,
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontWeight: 800,
+      fontSize: 14,
+      transition: 'all .15s',
+      border: `2px solid ${dir === 'SELL' ? 'var(--red)' : 'var(--border2)'}`,
+      background: dir === 'SELL' ? 'var(--red-dim)' : 'var(--bg3)',
+      color: dir === 'SELL' ? 'var(--red)' : 'var(--t2)'
+    }
+  }, "\u25BC SELL"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      marginBottom: 6,
+      letterSpacing: .5
+    }
+  }, "ACCOUNT BALANCE (USD)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    placeholder: "e.g. 10000",
+    value: bal,
+    onChange: e => setBal(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      marginBottom: 8,
+      letterSpacing: .5
+    }
+  }, "TRADE PARAMETERS"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 4
+    }
+  }, "Stop Loss *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    step: "0.00001",
+    placeholder: "0.00",
+    value: sl,
+    onChange: e => setSl(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 4
+    }
+  }, "Take Profit *"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    step: "0.00001",
+    placeholder: "0.00",
+    value: tp,
+    onChange: e => setTp(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 4
+    }
+  }, "Entry Price *"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    step: "0.00001",
+    placeholder: "0.00",
+    value: entry,
+    onChange: e => setEntry(e.target.value),
+    style: {
+      paddingRight: 60
+    }
+  }), livePrice && /*#__PURE__*/React.createElement("button", {
+    onClick: () => setEntry(livePrice.toFixed(dec)),
+    style: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      bottom: 0,
+      padding: '0 8px',
+      background: 'var(--blue-dim)',
+      border: 'none',
+      borderLeft: '1px solid var(--border2)',
+      borderRadius: '0 7px 7px 0',
+      color: 'var(--blue-l)',
+      fontSize: 10,
+      fontWeight: 700,
+      cursor: 'pointer',
+      fontFamily: 'var(--font)'
+    }
+  }, "LIVE"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 4
+    }
+  }, "Risk % *"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    step: "0.1",
+    min: "0.1",
+    max: "10",
+    placeholder: "1",
+    value: rPct,
+    onChange: e => setRPct(e.target.value),
+    style: {
+      paddingRight: 44
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      bottom: 0,
+      display: 'flex',
+      alignItems: 'center',
+      paddingRight: 8,
+      paddingLeft: 6,
+      fontSize: 10,
+      fontWeight: 700,
+      color: 'var(--blue-l)',
+      background: 'var(--blue-dim)',
+      borderRadius: '0 7px 7px 0',
+      borderLeft: '1px solid var(--border2)'
+    }
+  }, "USD"))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--bg3)',
+      border: `1px solid ${lots > 0 ? 'var(--blue-l)' : 'var(--border2)'}`,
+      borderRadius: 10,
+      padding: 12,
+      transition: 'border .3s'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      fontWeight: 700,
+      letterSpacing: .7,
+      marginBottom: 8
+    }
+  }, "POSITION SIZE"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      justifyContent: 'space-between',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      marginBottom: 2
+    }
+  }, "Lot Size"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 34,
+      fontWeight: 800,
+      color: lots > 0 ? 'var(--blue-l)' : 'var(--t3)',
+      lineHeight: 1,
+      fontFamily: 'monospace'
+    }
+  }, lots > 0 ? lots.toFixed(2) : '-'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      marginTop: 2
+    }
+  }, "standard lots")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)'
+    }
+  }, "Risk Amount"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--red)',
+      fontFamily: 'monospace'
+    }
+  }, riskUSD > 0 ? '$' + riskUSD.toFixed(2) : '-')), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)'
+    }
+  }, "SL Distance"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      color: 'var(--t2)',
+      fontFamily: 'monospace'
+    }
+  }, slPips, " pips"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)'
+    }
+  }, "R:R"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 20,
+      fontWeight: 800,
+      color: rr >= 2 ? 'var(--green)' : rr >= 1 ? 'var(--gold)' : 'var(--red)',
+      fontFamily: 'monospace'
+    }
+  }, rr > 0 ? '1:' + rr.toFixed(1) : '-'))), lots > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      padding: '6px 10px',
+      borderRadius: 7,
+      fontSize: 12,
+      fontWeight: 600,
+      background: dir === 'BUY' ? 'var(--green-dim)' : 'var(--red-dim)',
+      color: dir === 'BUY' ? 'var(--green)' : 'var(--red)',
+      border: `1px solid ${dir === 'BUY' ? 'rgba(16,185,129,.25)' : 'rgba(239,68,68,.25)'}`
+    }
+  }, dir === 'BUY' ? '^' : 'v', " ", dir, " ", /*#__PURE__*/React.createElement("strong", null, lots.toFixed(2)), " lots \xB7 ", pair, " \xB7 Risk $", riskUSD.toFixed(2))));
 }
 
-// – ANALYSIS TAB –––––––––––––––––––––––––––––
+// -- ANALYSIS TAB ----------------------------------------------------------
 
 function AnalysisTab(_ref1) {
-let {
-checks,
-tf
-} = _ref1;
-const TFS_ALL = […SCAL_TFS, …SWING_TFS];
-const rows = TFS_ALL.map(t => {
-const cat = tfCat(t);
-const sc = ITEMS.reduce((s, it) => {
-var _checks$t;
-return (_checks$t = checks[t]) != null && _checks$t[it.id] ? s + it.w[cat] : s;
-}, 0);
-const mx = ITEMS.reduce((s, it) => s + it.w[cat], 0);
-return {
-t,
-pct: Math.round(sc / mx * 100)
-};
-});
-const overall = Math.round(rows.reduce((a, r) => a + r.pct, 0) / rows.length);
-const {
-label,
-c
-} = confLabel(overall);
-const chk = checks[tf] || {};
-const active = ITEMS.filter(it => chk[it.id]).length;
-const riskScore = 100 - Math.round(active / ITEMS.length * 100);
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘grid’,
-gridTemplateColumns: ‘1fr 1fr 1fr’,
-gap: 12,
-maxWidth: 1100
-}
-}, /*#**PURE***/React.createElement(“div”, {
-className: “card”
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-justifyContent: ‘space-between’,
-alignItems: ‘center’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 700,
-fontSize: 13
-}
-}, “Timeframe Analysis”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-padding: ‘2px 7px’,
-borderRadius: 4,
-background: ‘var(–blue-dim)’,
-color: ‘var(–blue-l)’,
-letterSpacing: .5
-}
-}, “ACTIVE”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’
-}
-}, rows.map(_ref10 => {
-let {
-t,
-pct
-} = _ref10;
-const col = pct >= 60 ? ‘var(–green)’ : pct >= 30 ? ‘var(–gold)’ : ‘var(–red)’;
-return /*#**PURE***/React.createElement(“div”, {
-key: t,
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8,
-marginBottom: 6,
-background: t === tf ? ‘rgba(37,99,235,.05)’ : ‘transparent’,
-borderRadius: 5,
-padding: ‘3px 6px’,
-border: t === tf ? ‘1px solid rgba(37,99,235,.2)’ : ‘1px solid transparent’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-width: 28,
-fontSize: 11,
-fontWeight: 700,
-color: t === tf ? ‘var(–blue-l)’ : ‘var(–t2)’
-}
-}, t), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-height: 4,
-background: ‘var(–bg4)’,
-borderRadius: 2,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: ‘100%’,
-width: `${pct}%`,
-background: col,
-borderRadius: 2,
-transition: ‘width .5s’
-}
-})), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 11,
-fontWeight: 700,
-color: col,
-width: 32,
-textAlign: ‘right’,
-fontFamily: ‘monospace’
-}
-}, pct, “%”), t === tf && /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 8,
-color: ‘var(–blue-l)’,
-fontWeight: 700
-}
-}, “NOW”));
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 1,
-background: ‘var(–border)’,
-margin: ‘8px 0’
-}
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-justifyContent: ‘space-between’,
-alignItems: ‘center’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-color: ‘var(–t2)’
-}
-}, “Overall”), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘right’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 22,
-fontWeight: 800,
-color: c,
-fontFamily: ‘monospace’
-}
-}, overall, “%”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-color: c,
-letterSpacing: .8
-}
-}, label))))), /*#**PURE***/React.createElement(“div”, {
-className: “card”
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’,
-borderBottom: ‘1px solid var(–border)’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 700,
-fontSize: 13
-}
-}, “Risk Level”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘12px 14px’
-}
-}, [{
-l: ‘Market Volatility’,
-v: active > 5 ? {
-s: ‘Low’,
-c: ‘var(–green)’
-} : active > 3 ? {
-s: ‘Medium’,
-c: ‘var(–gold)’
-} : {
-s: ‘High’,
-c: ‘var(–red)’
-}
-}, {
-l: ‘Signal Reliability’,
-v: active > 5 ? {
-s: ‘High’,
-c: ‘var(–green)’
-} : active > 3 ? {
-s: ‘Moderate’,
-c: ‘var(–blue-l)’
-} : {
-s: ‘Low’,
-c: ‘var(–red)’
-}
-}, {
-l: ‘Trend Alignment’,
-v: chk.trend && chk.aoi ? {
-s: ‘Strong’,
-c: ‘var(–green)’
-} : chk.trend ? {
-s: ‘Moderate’,
-c: ‘var(–blue-l)’
-} : {
-s: ‘Weak’,
-c: ‘var(–red)’
-}
-}].map(_ref11 => {
-let {
-l,
-v
-} = _ref11;
-return /*#**PURE***/React.createElement(“div”, {
-key: l,
-style: {
-display: ‘flex’,
-justifyContent: ‘space-between’,
-marginBottom: 8
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 12,
-color: ‘var(–t2)’
-}
-}, l), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 700,
-fontSize: 12,
-color: v.c
-}
-}, v.s));
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 1,
-background: ‘var(–border)’,
-margin: ‘6px 0’
-}
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-marginBottom: 4
-}
-}, “Overall Risk Score”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 28,
-fontWeight: 800,
-fontFamily: ‘monospace’,
-color: riskScore < 40 ? ‘var(–green)’ : riskScore < 70 ? ‘var(–gold)’ : ‘var(–red)’
-}
-}, riskScore, “%”))), /*#**PURE***/React.createElement(“div”, {
-className: “card”
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘10px 14px’,
-borderBottom: ‘1px solid var(–border)’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 700,
-fontSize: 13
-}
-}, “Confluence Summary”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: 14,
-display: ‘flex’,
-flexDirection: ‘column’,
-alignItems: ‘center’,
-gap: 10
-}
-}, /*#**PURE***/React.createElement(Ring, {
-pct: overall,
-size: 110
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-color: ‘var(–t3)’,
-textAlign: ‘center’,
-lineHeight: 1.5
-}
-}, “Multi-timeframe confluence”), /*#**PURE***/React.createElement(“div”, {
-style: {
-width: ‘100%’
-}
-}, rows.slice(0, 6).map(_ref12 => {
-let {
-t,
-pct
-} = _ref12;
-const col = pct >= 60 ? ‘var(–green)’ : pct >= 30 ? ‘var(–gold)’ : ‘var(–red)’;
-return /*#**PURE***/React.createElement(“div”, {
-key: t,
-style: {
-display: ‘flex’,
-gap: 6,
-alignItems: ‘center’,
-marginBottom: 4
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-width: 26,
-fontSize: 10,
-color: ‘var(–t3)’,
-fontWeight: 600
-}
-}, t), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-height: 3,
-background: ‘var(–bg4)’,
-borderRadius: 2,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: ‘100%’,
-width: `${pct}%`,
-background: col,
-borderRadius: 2
-}
-})), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-fontWeight: 700,
-color: col,
-width: 28,
-textAlign: ‘right’
-}
-}, pct, “%”));
-})))));
+  let {
+    checks,
+    tf
+  } = _ref1;
+  const TFS_ALL = [...SCAL_TFS, ...SWING_TFS];
+  const rows = TFS_ALL.map(t => {
+    const cat = tfCat(t);
+    const sc = ITEMS.reduce((s, it) => {
+      var _checks$t;
+      return (_checks$t = checks[t]) != null && _checks$t[it.id] ? s + it.w[cat] : s;
+    }, 0);
+    const mx = ITEMS.reduce((s, it) => s + it.w[cat], 0);
+    return {
+      t,
+      pct: Math.round(sc / mx * 100)
+    };
+  });
+  const overall = Math.round(rows.reduce((a, r) => a + r.pct, 0) / rows.length);
+  const {
+    label,
+    c
+  } = confLabel(overall);
+  const chk = checks[tf] || {};
+  const active = ITEMS.filter(it => chk[it.id]).length;
+  const riskScore = 100 - Math.round(active / ITEMS.length * 100);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr 1fr',
+      gap: 12,
+      maxWidth: 1100
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13
+    }
+  }, "Timeframe Analysis"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      padding: '2px 7px',
+      borderRadius: 4,
+      background: 'var(--blue-dim)',
+      color: 'var(--blue-l)',
+      letterSpacing: .5
+    }
+  }, "ACTIVE")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px'
+    }
+  }, rows.map(_ref10 => {
+    let {
+      t,
+      pct
+    } = _ref10;
+    const col = pct >= 60 ? 'var(--green)' : pct >= 30 ? 'var(--gold)' : 'var(--red)';
+    return /*#__PURE__*/React.createElement("div", {
+      key: t,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 6,
+        background: t === tf ? 'rgba(37,99,235,.05)' : 'transparent',
+        borderRadius: 5,
+        padding: '3px 6px',
+        border: t === tf ? '1px solid rgba(37,99,235,.2)' : '1px solid transparent'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 28,
+        fontSize: 11,
+        fontWeight: 700,
+        color: t === tf ? 'var(--blue-l)' : 'var(--t2)'
+      }
+    }, t), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        height: 4,
+        background: 'var(--bg4)',
+        borderRadius: 2,
+        overflow: 'hidden'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: '100%',
+        width: `${pct}%`,
+        background: col,
+        borderRadius: 2,
+        transition: 'width .5s'
+      }
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: col,
+        width: 32,
+        textAlign: 'right',
+        fontFamily: 'monospace'
+      }
+    }, pct, "%"), t === tf && /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 8,
+        color: 'var(--blue-l)',
+        fontWeight: 700
+      }
+    }, "NOW"));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 1,
+      background: 'var(--border)',
+      margin: '8px 0'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--t2)'
+    }
+  }, "Overall"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'right'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 22,
+      fontWeight: 800,
+      color: c,
+      fontFamily: 'monospace'
+    }
+  }, overall, "%"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      color: c,
+      letterSpacing: .8
+    }
+  }, label))))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px',
+      borderBottom: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13
+    }
+  }, "Risk Level")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '12px 14px'
+    }
+  }, [{
+    l: 'Market Volatility',
+    v: active > 5 ? {
+      s: 'Low',
+      c: 'var(--green)'
+    } : active > 3 ? {
+      s: 'Medium',
+      c: 'var(--gold)'
+    } : {
+      s: 'High',
+      c: 'var(--red)'
+    }
+  }, {
+    l: 'Signal Reliability',
+    v: active > 5 ? {
+      s: 'High',
+      c: 'var(--green)'
+    } : active > 3 ? {
+      s: 'Moderate',
+      c: 'var(--blue-l)'
+    } : {
+      s: 'Low',
+      c: 'var(--red)'
+    }
+  }, {
+    l: 'Trend Alignment',
+    v: chk.trend && chk.aoi ? {
+      s: 'Strong',
+      c: 'var(--green)'
+    } : chk.trend ? {
+      s: 'Moderate',
+      c: 'var(--blue-l)'
+    } : {
+      s: 'Weak',
+      c: 'var(--red)'
+    }
+  }].map(_ref11 => {
+    let {
+      l,
+      v
+    } = _ref11;
+    return /*#__PURE__*/React.createElement("div", {
+      key: l,
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12,
+        color: 'var(--t2)'
+      }
+    }, l), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700,
+        fontSize: 12,
+        color: v.c
+      }
+    }, v.s));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 1,
+      background: 'var(--border)',
+      margin: '6px 0'
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      marginBottom: 4
+    }
+  }, "Overall Risk Score"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      fontWeight: 800,
+      fontFamily: 'monospace',
+      color: riskScore < 40 ? 'var(--green)' : riskScore < 70 ? 'var(--gold)' : 'var(--red)'
+    }
+  }, riskScore, "%"))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '10px 14px',
+      borderBottom: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13
+    }
+  }, "Confluence Summary")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: 14,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement(Ring, {
+    pct: overall,
+    size: 110
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--t3)',
+      textAlign: 'center',
+      lineHeight: 1.5
+    }
+  }, "Multi-timeframe confluence"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: '100%'
+    }
+  }, rows.slice(0, 6).map(_ref12 => {
+    let {
+      t,
+      pct
+    } = _ref12;
+    const col = pct >= 60 ? 'var(--green)' : pct >= 30 ? 'var(--gold)' : 'var(--red)';
+    return /*#__PURE__*/React.createElement("div", {
+      key: t,
+      style: {
+        display: 'flex',
+        gap: 6,
+        alignItems: 'center',
+        marginBottom: 4
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 26,
+        fontSize: 10,
+        color: 'var(--t3)',
+        fontWeight: 600
+      }
+    }, t), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        height: 3,
+        background: 'var(--bg4)',
+        borderRadius: 2,
+        overflow: 'hidden'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: '100%',
+        width: `${pct}%`,
+        background: col,
+        borderRadius: 2
+      }
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 10,
+        fontWeight: 700,
+        color: col,
+        width: 28,
+        textAlign: 'right'
+      }
+    }, pct, "%"));
+  })))));
 }
 
-// – ECO CALENDAR MODAL ––––––––––––––––––––––––––
+// -- ECO CALENDAR MODAL ----------------------------------------------------
 
 const ECO_FALLBACK = [{
-t: ‘08:30’,
-ccy: ‘USD’,
-imp: ‘high’,
-ev: ‘Non-Farm Payrolls’,
-prev: ‘256K’,
-fore: ‘170K’
+  t: '08:30',
+  ccy: 'USD',
+  imp: 'high',
+  ev: 'Non-Farm Payrolls',
+  prev: '256K',
+  fore: '170K'
 }, {
-t: ‘10:00’,
-ccy: ‘EUR’,
-imp: ‘high’,
-ev: ‘ECB Rate Decision’,
-prev: ‘3.5%’,
-fore: ‘3.25%’
+  t: '10:00',
+  ccy: 'EUR',
+  imp: 'high',
+  ev: 'ECB Rate Decision',
+  prev: '3.5%',
+  fore: '3.25%'
 }, {
-t: ‘12:00’,
-ccy: ‘GBP’,
-imp: ‘medium’,
-ev: ‘UK CPI y/y’,
-prev: ‘2.6%’,
-fore: ‘2.4%’
+  t: '12:00',
+  ccy: 'GBP',
+  imp: 'medium',
+  ev: 'UK CPI y/y',
+  prev: '2.6%',
+  fore: '2.4%'
 }, {
-t: ‘14:30’,
-ccy: ‘USD’,
-imp: ‘high’,
-ev: ‘Core CPI m/m’,
-prev: ‘0.4%’,
-fore: ‘0.3%’
+  t: '14:30',
+  ccy: 'USD',
+  imp: 'high',
+  ev: 'Core CPI m/m',
+  prev: '0.4%',
+  fore: '0.3%'
 }, {
-t: ‘17:30’,
-ccy: ‘GBP’,
-imp: ‘medium’,
-ev: ‘BOE Gov Speaks’,
-prev: ‘-’,
-fore: ‘-’
+  t: '17:30',
+  ccy: 'GBP',
+  imp: 'medium',
+  ev: 'BOE Gov Speaks',
+  prev: '-',
+  fore: '-'
 }, {
-t: ‘20:00’,
-ccy: ‘USD’,
-imp: ‘high’,
-ev: ‘FOMC Minutes’,
-prev: ‘-’,
-fore: ‘-’
+  t: '20:00',
+  ccy: 'USD',
+  imp: 'high',
+  ev: 'FOMC Minutes',
+  prev: '-',
+  fore: '-'
 }];
 function EcoModal(_ref13) {
-let {
-onClose
-} = _ref13;
-const [events, setEvents] = useState(ECO_FALLBACK);
-const [loading, setLoading] = useState(true);
-const [filt, setFilt] = useState(‘all’);
-const [hidePast, setHidePast] = useState(false);
-useEffect(() => {
-const proxies = [‘https://corsproxy.io/?’, ‘https://api.allorigins.win/raw?url=’];
-const url = ‘https://nfs.faireconomy.media/ff_calendar_thisweek.json’;
-let done = false;
-proxies.forEach(proxy => {
-if (done) return;
-fetch(proxy + encodeURIComponent(url)).then(r => r.json()).then(d => {
-if (done || !Array.isArray(d) || !d.length) return;
-done = true;
-setEvents(d.map(e => ({
-t: e.date ? new Date(e.date).toLocaleTimeString(‘en-GB’, {
-hour: ‘2-digit’,
-minute: ‘2-digit’,
-timeZone: ‘UTC’
-}) : ‘-’,
-date: e.date,
-ccy: e.country || ‘-’,
-imp: e.impact === ‘High’ ? ‘high’ : e.impact === ‘Medium’ ? ‘medium’ : ‘low’,
-ev: e.title || ‘-’,
-prev: e.previous || ‘-’,
-fore: e.forecast || ‘-’,
-actual: e.actual || null
-})));
-setLoading(false);
-}).catch(() => setLoading(false));
-});
-setTimeout(() => setLoading(false), 4000);
-}, []);
-const now = new Date();
-const filtered = events.filter(e => {
-if (filt !== ‘all’ && e.imp !== filt) return false;
-if (hidePast && e.date && new Date(e.date) < now) return false;
-return true;
-});
-const iC = {
-high: ‘#ef4444’,
-medium: ‘#f59e0b’,
-low: ‘#3b82f6’
-};
-const iB = {
-high: ‘rgba(239,68,68,.12)’,
-medium: ‘rgba(245,158,11,.12)’,
-low: ‘rgba(59,130,246,.12)’
-};
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘fixed’,
-inset: 0,
-background: ‘rgba(0,0,0,.8)’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-zIndex: 500,
-backdropFilter: ‘blur(4px)’
-},
-onClick: e => e.target === e.currentTarget && onClose()
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-background: ‘var(–bg2)’,
-border: ‘1px solid var(–border2)’,
-borderRadius: 14,
-width: 680,
-maxWidth: ‘96vw’,
-maxHeight: ‘85vh’,
-overflow: ‘hidden’,
-display: ‘flex’,
-flexDirection: ‘column’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘14px 18px’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-justifyContent: ‘space-between’,
-alignItems: ‘center’,
-flexShrink: 0
-}
-}, /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 800,
-fontSize: 15
-}
-}, “\uD83D\uDCC5 Economic Calendar”), !loading && /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-color: ‘var(–green)’,
-marginLeft: 10
-}
-}, “\u25CF LIVE”)), /*#**PURE***/React.createElement(“button”, {
-onClick: onClose,
-style: {
-background: ‘none’,
-border: ‘none’,
-color: ‘var(–t3)’,
-fontSize: 22,
-cursor: ‘pointer’
-}
-}, “\xD7”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘8px 18px’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-gap: 6,
-alignItems: ‘center’,
-flexShrink: 0,
-flexWrap: ‘wrap’
-}
-}, [‘all’, ‘high’, ‘medium’, ‘low’].map(f => /*#**PURE***/React.createElement(“button”, {
-key: f,
-onClick: () => setFilt(f),
-style: {
-padding: ‘4px 12px’,
-borderRadius: 6,
-border: ‘none’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontWeight: 600,
-fontSize: 11,
-background: filt === f ? ‘var(–blue)’ : ‘var(–bg3)’,
-color: filt === f ? ‘#fff’ : ‘var(–t3)’
-}
-}, f === ‘all’ ? ‘All’ : f.charAt(0).toUpperCase() + f.slice(1))), /*#**PURE***/React.createElement(“label”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-marginLeft: ‘auto’,
-fontSize: 11,
-color: ‘var(–t2)’,
-cursor: ‘pointer’
-}
-}, “Hide Past “, /*#**PURE***/React.createElement(Toggle, {
-checked: hidePast,
-onChange: setHidePast
-}))), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-overflowY: ‘auto’
-}
-}, filtered.map((e, i) => /*#**PURE***/React.createElement(“div”, {
-key: i,
-style: {
-display: ‘grid’,
-gridTemplateColumns: ‘55px 40px 1fr 70px 70px’,
-gap: 10,
-padding: ‘10px 18px’,
-borderBottom: ‘1px solid var(–border)’,
-alignItems: ‘center’,
-opacity: e.date && new Date(e.date) < now ? .6 : 1
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 11,
-color: ‘var(–t2)’,
-fontFamily: ‘monospace’
-}
-}, e.t), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-fontWeight: 700,
-padding: ‘2px 6px’,
-borderRadius: 4,
-textAlign: ‘center’,
-background: iB[e.imp],
-color: iC[e.imp]
-}
-}, e.ccy), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 12,
-fontWeight: 600
-}
-}, e.ev), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 8,
-fontWeight: 700,
-padding: ‘1px 5px’,
-borderRadius: 3,
-background: iB[e.imp],
-color: iC[e.imp],
-letterSpacing: .5
-}
-}, e.imp.toUpperCase())), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘center’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-marginBottom: 1
-}
-}, “PREV”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-fontFamily: ‘monospace’,
-color: ‘var(–t2)’
-}
-}, e.prev)), /*#**PURE***/React.createElement(“div”, {
-style: {
-textAlign: ‘center’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’,
-marginBottom: 1
-}
-}, “FORECAST”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-fontFamily: ‘monospace’,
-fontWeight: 700,
-color: e.actual ? ‘var(–green)’ : ‘var(–gold)’
-}
-}, e.actual || e.fore)))))));
+  let {
+    onClose
+  } = _ref13;
+  const [events, setEvents] = useState(ECO_FALLBACK);
+  const [loading, setLoading] = useState(true);
+  const [filt, setFilt] = useState('all');
+  const [hidePast, setHidePast] = useState(false);
+  useEffect(() => {
+    const proxies = ['https://corsproxy.io/?', 'https://api.allorigins.win/raw?url='];
+    const url = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+    let done = false;
+    proxies.forEach(proxy => {
+      if (done) return;
+      fetch(proxy + encodeURIComponent(url)).then(r => r.json()).then(d => {
+        if (done || !Array.isArray(d) || !d.length) return;
+        done = true;
+        setEvents(d.map(e => ({
+          t: e.date ? new Date(e.date).toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'UTC'
+          }) : '-',
+          date: e.date,
+          ccy: e.country || '-',
+          imp: e.impact === 'High' ? 'high' : e.impact === 'Medium' ? 'medium' : 'low',
+          ev: e.title || '-',
+          prev: e.previous || '-',
+          fore: e.forecast || '-',
+          actual: e.actual || null
+        })));
+        setLoading(false);
+      }).catch(() => setLoading(false));
+    });
+    setTimeout(() => setLoading(false), 4000);
+  }, []);
+  const now = new Date();
+  const filtered = events.filter(e => {
+    if (filt !== 'all' && e.imp !== filt) return false;
+    if (hidePast && e.date && new Date(e.date) < now) return false;
+    return true;
+  });
+  const iC = {
+    high: '#ef4444',
+    medium: '#f59e0b',
+    low: '#3b82f6'
+  };
+  const iB = {
+    high: 'rgba(239,68,68,.12)',
+    medium: 'rgba(245,158,11,.12)',
+    low: 'rgba(59,130,246,.12)'
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(0,0,0,.8)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 500,
+      backdropFilter: 'blur(4px)'
+    },
+    onClick: e => e.target === e.currentTarget && onClose()
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--bg2)',
+      border: '1px solid var(--border2)',
+      borderRadius: 14,
+      width: 680,
+      maxWidth: '96vw',
+      maxHeight: '85vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '14px 18px',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 800,
+      fontSize: 15
+    }
+  }, "\uD83D\uDCC5 Economic Calendar"), !loading && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: 'var(--green)',
+      marginLeft: 10
+    }
+  }, "\u25CF LIVE")), /*#__PURE__*/React.createElement("button", {
+    onClick: onClose,
+    style: {
+      background: 'none',
+      border: 'none',
+      color: 'var(--t3)',
+      fontSize: 22,
+      cursor: 'pointer'
+    }
+  }, "\xD7")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 18px',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      gap: 6,
+      alignItems: 'center',
+      flexShrink: 0,
+      flexWrap: 'wrap'
+    }
+  }, ['all', 'high', 'medium', 'low'].map(f => /*#__PURE__*/React.createElement("button", {
+    key: f,
+    onClick: () => setFilt(f),
+    style: {
+      padding: '4px 12px',
+      borderRadius: 6,
+      border: 'none',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontWeight: 600,
+      fontSize: 11,
+      background: filt === f ? 'var(--blue)' : 'var(--bg3)',
+      color: filt === f ? '#fff' : 'var(--t3)'
+    }
+  }, f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1))), /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      marginLeft: 'auto',
+      fontSize: 11,
+      color: 'var(--t2)',
+      cursor: 'pointer'
+    }
+  }, "Hide Past ", /*#__PURE__*/React.createElement(Toggle, {
+    checked: hidePast,
+    onChange: setHidePast
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: 'auto'
+    }
+  }, filtered.map((e, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '55px 40px 1fr 70px 70px',
+      gap: 10,
+      padding: '10px 18px',
+      borderBottom: '1px solid var(--border)',
+      alignItems: 'center',
+      opacity: e.date && new Date(e.date) < now ? .6 : 1
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11,
+      color: 'var(--t2)',
+      fontFamily: 'monospace'
+    }
+  }, e.t), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      fontWeight: 700,
+      padding: '2px 6px',
+      borderRadius: 4,
+      textAlign: 'center',
+      background: iB[e.imp],
+      color: iC[e.imp]
+    }
+  }, e.ccy), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, e.ev), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 8,
+      fontWeight: 700,
+      padding: '1px 5px',
+      borderRadius: 3,
+      background: iB[e.imp],
+      color: iC[e.imp],
+      letterSpacing: .5
+    }
+  }, e.imp.toUpperCase())), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      marginBottom: 1
+    }
+  }, "PREV"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontFamily: 'monospace',
+      color: 'var(--t2)'
+    }
+  }, e.prev)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)',
+      marginBottom: 1
+    }
+  }, "FORECAST"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontFamily: 'monospace',
+      fontWeight: 700,
+      color: e.actual ? 'var(--green)' : 'var(--gold)'
+    }
+  }, e.actual || e.fore)))))));
 }
 
-// – PAIR SEARCH DROPDOWN –––––––––––––––––––––––––
+// -- PAIR SEARCH DROPDOWN --------------------------------------------------
 
 function PairDropdown(_ref14) {
-let {
-pair,
-onSelect,
-onClose
-} = _ref14;
-const [q, setQ] = useState(’’);
-const filtered = useMemo(() => {
-if (!q.trim()) return PAIR_GROUPS;
-const qu = q.toUpperCase();
-const r = {};
-Object.entries(PAIR_GROUPS).forEach(_ref15 => {
-let [grp, pairs] = _ref15;
-const m = pairs.filter(p => p.includes(qu));
-if (m.length) r[grp] = m;
-});
-return r;
-}, [q]);
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-top: ‘calc(100%+5px)’,
-right: 0,
-background: ‘var(–bg2)’,
-border: ‘1px solid var(–border2)’,
-borderRadius: 12,
-zIndex: 300,
-width: 230,
-boxShadow: ‘0 12px 40px rgba(0,0,0,.7)’,
-marginTop: 4,
-display: ‘flex’,
-flexDirection: ‘column’,
-maxHeight: ‘75vh’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘8px 10px’,
-borderBottom: ‘1px solid var(–border)’,
-flexShrink: 0
-}
-}, /*#**PURE***/React.createElement(“input”, {
-autoFocus: true,
-className: “input”,
-placeholder: “Search pair… (e.g. XAU)”,
-value: q,
-onChange: e => setQ(e.target.value),
-style: {
-fontSize: 13
-}
-})), /*#**PURE***/React.createElement(“div”, {
-style: {
-overflowY: ‘auto’,
-flex: 1
-}
-}, Object.entries(filtered).map(_ref16 => {
-let [grp, pairs] = _ref16;
-return /*#**PURE***/React.createElement(“div”, {
-key: grp
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-padding: ‘5px 12px 3px’,
-fontSize: 9,
-fontWeight: 800,
-color: ‘var(–t3)’,
-letterSpacing: 1,
-background: ‘var(–bg1)’,
-position: ‘sticky’,
-top: 0,
-borderBottom: ‘1px solid var(–border)’
-}
-}, grp.toUpperCase()), pairs.map(p => /*#**PURE***/React.createElement(“div”, {
-key: p,
-onClick: () => {
-onSelect(p);
-onClose();
-},
-style: {
-padding: ‘8px 12px’,
-cursor: ‘pointer’,
-fontSize: 13,
-fontWeight: 600,
-background: pair === p ? ‘var(–blue-dim)’ : ‘transparent’,
-color: pair === p ? ‘var(–blue-l)’ : ‘var(–t2)’,
-borderLeft: pair === p ? ‘3px solid var(–blue-l)’ : ‘3px solid transparent’,
-borderBottom: ‘1px solid rgba(255,255,255,.02)’
-},
-onMouseEnter: e => {
-if (p !== pair) e.currentTarget.style.background = ‘rgba(255,255,255,.03)’;
-},
-onMouseLeave: e => {
-if (p !== pair) e.currentTarget.style.background = ‘transparent’;
-}
-}, p)));
-})));
+  let {
+    pair,
+    onSelect,
+    onClose
+  } = _ref14;
+  const [q, setQ] = useState('');
+  const filtered = useMemo(() => {
+    if (!q.trim()) return PAIR_GROUPS;
+    const qu = q.toUpperCase();
+    const r = {};
+    Object.entries(PAIR_GROUPS).forEach(_ref15 => {
+      let [grp, pairs] = _ref15;
+      const m = pairs.filter(p => p.includes(qu));
+      if (m.length) r[grp] = m;
+    });
+    return r;
+  }, [q]);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 'calc(100%+5px)',
+      right: 0,
+      background: 'var(--bg2)',
+      border: '1px solid var(--border2)',
+      borderRadius: 12,
+      zIndex: 300,
+      width: 230,
+      boxShadow: '0 12px 40px rgba(0,0,0,.7)',
+      marginTop: 4,
+      display: 'flex',
+      flexDirection: 'column',
+      maxHeight: '75vh'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '8px 10px',
+      borderBottom: '1px solid var(--border)',
+      flexShrink: 0
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    autoFocus: true,
+    className: "input",
+    placeholder: "Search pair... (e.g. XAU)",
+    value: q,
+    onChange: e => setQ(e.target.value),
+    style: {
+      fontSize: 13
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflowY: 'auto',
+      flex: 1
+    }
+  }, Object.entries(filtered).map(_ref16 => {
+    let [grp, pairs] = _ref16;
+    return /*#__PURE__*/React.createElement("div", {
+      key: grp
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: '5px 12px 3px',
+        fontSize: 9,
+        fontWeight: 800,
+        color: 'var(--t3)',
+        letterSpacing: 1,
+        background: 'var(--bg1)',
+        position: 'sticky',
+        top: 0,
+        borderBottom: '1px solid var(--border)'
+      }
+    }, grp.toUpperCase()), pairs.map(p => /*#__PURE__*/React.createElement("div", {
+      key: p,
+      onClick: () => {
+        onSelect(p);
+        onClose();
+      },
+      style: {
+        padding: '8px 12px',
+        cursor: 'pointer',
+        fontSize: 13,
+        fontWeight: 600,
+        background: pair === p ? 'var(--blue-dim)' : 'transparent',
+        color: pair === p ? 'var(--blue-l)' : 'var(--t2)',
+        borderLeft: pair === p ? '3px solid var(--blue-l)' : '3px solid transparent',
+        borderBottom: '1px solid rgba(255,255,255,.02)'
+      },
+      onMouseEnter: e => {
+        if (p !== pair) e.currentTarget.style.background = 'rgba(255,255,255,.03)';
+      },
+      onMouseLeave: e => {
+        if (p !== pair) e.currentTarget.style.background = 'transparent';
+      }
+    }, p)));
+  })));
 }
 
-// – MAIN APP –––––––––––––––––––––––––––––––
+// -- MAIN APP --------------------------------------------------------------
 
 function App() {
-const [strategy, setStrategy] = useState(‘swing’);
-const [showStratD, setShowStratD] = useState(false);
-const [tf, setTf] = useState(‘4H’);
-const [pair, setPair] = useState(‘AUD/USD’);
-const [showPairD, setShowPairD] = useState(false);
-const [tab, setTab] = useState(‘trade’);
-const [chartView, setChartView] = useState(‘chart’);
-const [showEco, setShowEco] = useState(false);
-const [tradeLines, setTradeLines] = useState({
-entry: ‘’,
-sl: ‘’,
-tp: ‘’,
-dir: ‘BUY’
-});
-const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  const [strategy, setStrategy] = useState('swing');
+  const [showStratD, setShowStratD] = useState(false);
+  const [tf, setTf] = useState('4H');
+  const [pair, setPair] = useState('AUD/USD');
+  const [showPairD, setShowPairD] = useState(false);
+  const [tab, setTab] = useState('trade');
+  const [chartView, setChartView] = useState('chart');
+  const [showEco, setShowEco] = useState(false);
+  const [tradeLines, setTradeLines] = useState({
+    entry: '',
+    sl: '',
+    tp: '',
+    dir: 'BUY'
+  });
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
 
-// Per-TF checklist state
-const [checks, setChecks] = useState(() => {
-const o = {};
-[…SCAL_TFS, …SWING_TFS].forEach(t => {
-o[t] = {
-trend: true,
-aoi: true,
-ema: false,
-psych: [‘1D’, ‘1W’].includes(t),
-struct: false,
-candle: true,
-hns: false
-};
-});
-return o;
-});
-const [sessions, setSessions] = useState(getSessionStatus);
-const [clock, setClock] = useState(new Date());
-useEffect(() => {
-const t = setInterval(() => {
-setSessions(getSessionStatus());
-setClock(new Date());
-}, 1000);
-return () => clearInterval(t);
-}, []);
-useEffect(() => {
-const fn = () => setIsMobile(window.innerWidth < 768);
-window.addEventListener(‘resize’, fn);
-return () => window.removeEventListener(‘resize’, fn);
-}, []);
-const {
-price: livePrice,
-change: liveChange,
-pct: livePct,
-src: liveSrc
-} = useLivePrice(pair);
-const isUp = liveChange >= 0;
-const dec = pairDec(pair);
-const mktOpen = isForexOpen() || [‘BTC/USD’, ‘ETH/USD’, ‘SOL/USD’, ‘XRP/USD’, ‘BNB/USD’, ‘ADA/USD’, ‘AVAX/USD’, ‘DOGE/USD’].includes(pair);
-const utcStr = `${String(clock.getUTCHours()).padStart(2, '0')}:${String(clock.getUTCMinutes()).padStart(2, '0')}:${String(clock.getUTCSeconds()).padStart(2, '0')} UTC`;
-const curTF = strategy === ‘scalping’ ? SCAL_TFS : SWING_TFS;
-const toggleItem = (id, v) => setChecks(p => ({
-…p,
-[tf]: {
-…p[tf],
-[id]: v
-}
-}));
+  // Per-TF checklist state
+  const [checks, setChecks] = useState(() => {
+    const o = {};
+    [...SCAL_TFS, ...SWING_TFS].forEach(t => {
+      o[t] = {
+        trend: true,
+        aoi: true,
+        ema: false,
+        psych: ['1D', '1W'].includes(t),
+        struct: false,
+        candle: true,
+        hns: false
+      };
+    });
+    return o;
+  });
+  const [sessions, setSessions] = useState(getSessionStatus);
+  const [clock, setClock] = useState(new Date());
+  useEffect(() => {
+    const t = setInterval(() => {
+      setSessions(getSessionStatus());
+      setClock(new Date());
+    }, 1000);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', fn);
+    return () => window.removeEventListener('resize', fn);
+  }, []);
+  const {
+    price: livePrice,
+    change: liveChange,
+    pct: livePct,
+    src: liveSrc
+  } = useLivePrice(pair);
+  const isUp = liveChange >= 0;
+  const dec = pairDec(pair);
+  const mktOpen = isForexOpen() || ['BTC/USD', 'ETH/USD', 'SOL/USD', 'XRP/USD', 'BNB/USD', 'ADA/USD', 'AVAX/USD', 'DOGE/USD'].includes(pair);
+  const utcStr = `${String(clock.getUTCHours()).padStart(2, '0')}:${String(clock.getUTCMinutes()).padStart(2, '0')}:${String(clock.getUTCSeconds()).padStart(2, '0')} UTC`;
+  const curTF = strategy === 'scalping' ? SCAL_TFS : SWING_TFS;
+  const toggleItem = (id, v) => setChecks(p => ({
+    ...p,
+    [tf]: {
+      ...p[tf],
+      [id]: v
+    }
+  }));
 
-// Src badge color
-const srcColor = liveSrc === ‘LIVE’ || liveSrc === ‘BINANCE’ ? ‘var(–green)’ : liveSrc === ‘CLOSED’ ? ‘var(–red)’ : ‘var(–gold)’;
-const srcLabel = liveSrc === ‘LIVE’ ? ‘LIVE.TD’ : liveSrc === ‘BINANCE’ ? ‘LIVE.BINANCE’ : liveSrc === ‘CLOSED’ ? ‘CLOSED’ : ‘SIM’;
-return /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-flexDirection: ‘column’,
-height: ‘100vh’,
-overflow: ‘hidden’
+  // Src badge color
+  const srcColor = liveSrc === 'LIVE' || liveSrc === 'BINANCE' ? 'var(--green)' : liveSrc === 'CLOSED' ? 'var(--red)' : 'var(--gold)';
+  const srcLabel = liveSrc === 'LIVE' ? 'LIVE.TD' : liveSrc === 'BINANCE' ? 'LIVE.BINANCE' : liveSrc === 'CLOSED' ? 'CLOSED' : 'SIM';
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 50,
+      flexShrink: 0,
+      background: 'var(--bg1)',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '0 10px',
+      zIndex: 150,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      marginRight: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 26,
+      height: 26,
+      borderRadius: 7,
+      background: 'linear-gradient(135deg,var(--blue),#1e40af)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 13
+    }
+  }, "\u2295"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 900,
+      fontSize: 13,
+      letterSpacing: .5,
+      background: 'linear-gradient(135deg,#60a5fa,#3b82f6)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    }
+  }, "ATHENA")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowStratD(p => !p),
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 5,
+      background: 'var(--bg3)',
+      border: '1px solid var(--border2)',
+      borderRadius: 7,
+      padding: '4px 9px',
+      color: 'var(--t1)',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 12,
+      fontWeight: 600
+    }
+  }, "\u2197 ", strategy === 'scalping' ? 'Scalping' : 'Swing Trading', " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)'
+    }
+  }, "\u25BE")), showStratD && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: 'calc(100%+4px)',
+      left: 0,
+      background: 'var(--bg2)',
+      border: '1px solid var(--border2)',
+      borderRadius: 10,
+      overflow: 'hidden',
+      zIndex: 300,
+      minWidth: 200,
+      boxShadow: '0 10px 40px rgba(0,0,0,.6)',
+      marginTop: 4
+    }
+  }, [{
+    id: 'scalping',
+    label: 'Scalping',
+    desc: 'Quick trades . 1m-45m'
+  }, {
+    id: 'swing',
+    label: 'Swing Trading',
+    desc: 'Multi-day . 4H-1W'
+  }].map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.id,
+    onClick: () => {
+      setStrategy(s.id);
+      setTf(s.id === 'scalping' ? '5m' : '4H');
+      setShowStratD(false);
+    },
+    style: {
+      padding: '10px 14px',
+      cursor: 'pointer',
+      background: strategy === s.id ? 'var(--blue-dim)' : 'transparent',
+      borderLeft: strategy === s.id ? '3px solid var(--blue-l)' : '3px solid transparent'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13
+    }
+  }, s.label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--t3)',
+      marginTop: 2
+    }
+  }, s.desc))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 2,
+      background: 'var(--bg3)',
+      padding: 3,
+      borderRadius: 7,
+      border: '1px solid var(--border)',
+      flexWrap: 'wrap'
+    }
+  }, curTF.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t,
+    onClick: () => setTf(t),
+    style: {
+      padding: '4px 9px',
+      borderRadius: 5,
+      border: 'none',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 12,
+      fontWeight: 700,
+      background: tf === t ? 'var(--blue)' : 'transparent',
+      color: tf === t ? '#fff' : 'var(--t3)',
+      transition: 'all .12s'
+    }
+  }, t))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: '3px 8px',
+      borderRadius: 6,
+      background: `rgba(${liveSrc === 'CLOSED' ? '239,68,68' : liveSrc === 'SIM' ? '245,158,11' : '16,185,129'},.1)`,
+      border: `1px solid ${srcColor}40`,
+      fontSize: 9,
+      fontWeight: 700,
+      color: srcColor
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pulse",
+    style: {
+      width: 5,
+      height: 5,
+      borderRadius: '50%',
+      background: srcColor,
+      display: 'inline-block'
+    }
+  }), srcLabel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowPairD(p => !p),
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 6,
+      background: 'var(--bg3)',
+      border: '1px solid var(--border2)',
+      borderRadius: 7,
+      padding: '4px 11px',
+      color: 'var(--t1)',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, "\uD83C\uDF10 ", pair, livePrice && /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: isUp ? 'var(--green)' : 'var(--red)',
+      fontSize: 11,
+      fontFamily: 'monospace',
+      fontWeight: 800
+    }
+  }, livePrice.toFixed(dec)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      color: 'var(--t3)'
+    }
+  }, "\u25BE")), showPairD && /*#__PURE__*/React.createElement(PairDropdown, {
+    pair: pair,
+    onSelect: setPair,
+    onClose: () => setShowPairD(false)
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setShowEco(true),
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 4,
+      padding: '4px 9px',
+      borderRadius: 7,
+      border: '1px solid var(--border2)',
+      background: 'var(--bg3)',
+      color: 'var(--t2)',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 11,
+      fontWeight: 600
+    }
+  }, "\uD83D\uDCC5 CALENDAR"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => document.documentElement.requestFullscreen == null ? void 0 : document.documentElement.requestFullscreen(),
+    style: {
+      background: 'none',
+      border: 'none',
+      color: 'var(--t3)',
+      cursor: 'pointer',
+      fontSize: 15,
+      padding: 4
+    }
+  }, "\u26F6")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: '0 0 48%',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 30,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      background: 'var(--bg1)',
+      borderBottom: '1px solid var(--border)',
+      gap: 0
+    }
+  }, [{
+    id: 'chart',
+    label: '\uD83D\uDCC8 Chart'
+  }, {
+    id: 'orderflow',
+    label: '* Order Flow'
+  }, {
+    id: 'confluence',
+    label: '\uD83C\uDFAF Confluence'
+  }].map(v => /*#__PURE__*/React.createElement("button", {
+    key: v.id,
+    onClick: () => setChartView(v.id),
+    style: {
+      padding: '4px 14px',
+      border: 'none',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 11,
+      fontWeight: 700,
+      height: '100%',
+      background: chartView === v.id ? 'var(--bg2)' : 'transparent',
+      color: chartView === v.id ? 'var(--t1)' : 'var(--t3)',
+      borderBottom: chartView === v.id ? '2px solid var(--blue)' : '2px solid transparent',
+      transition: 'all .15s'
+    }
+  }, v.label))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: 'flex',
+      minHeight: 0,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      position: 'relative',
+      overflow: 'hidden'
+    }
+  }, chartView === 'chart' && /*#__PURE__*/React.createElement(TVChart, {
+    key: pair + '_' + tf,
+    pair: pair,
+    tf: tf,
+    livePrice: livePrice,
+    tradeLines: tradeLines
+  }), chartView === 'orderflow' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--bg1)',
+      flexDirection: 'column',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 24
+    }
+  }, "\u26A1"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      color: 'var(--t1)'
+    }
+  }, "Order Flow \xB7 ", pair, " \xB7 ", tf), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--t3)'
+    }
+  }, "Volume delta analysis \u2014 coming soon")), chartView === 'confluence' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: '100%',
+      height: '100%',
+      overflowY: 'auto',
+      padding: 14,
+      background: 'var(--bg1)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      marginBottom: 14
+    }
+  }, (() => {
+    const tfsAll = [...SCAL_TFS, ...SWING_TFS];
+    const rows = tfsAll.map(t => {
+      const cat = tfCat(t);
+      const sc = ITEMS.reduce((s, it) => {
+        var _checks$t2;
+        return (_checks$t2 = checks[t]) != null && _checks$t2[it.id] ? s + it.w[cat] : s;
+      }, 0);
+      const mx = ITEMS.reduce((s, it) => s + it.w[cat], 0);
+      return Math.round(sc / mx * 100);
+    });
+    const ov = Math.round(rows.reduce((a, b) => a + b, 0) / rows.length);
+    return /*#__PURE__*/React.createElement(Ring, {
+      pct: ov,
+      size: 110
+    });
+  })()), ITEMS.map(it => {
+    var _checks$tf;
+    const on = !!((_checks$tf = checks[tf]) != null && _checks$tf[it.id]);
+    const cat = tfCat(tf);
+    return /*#__PURE__*/React.createElement("div", {
+      key: it.id,
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '6px 8px',
+        marginBottom: 3,
+        borderRadius: 7,
+        background: on ? 'rgba(16,185,129,.06)' : 'transparent',
+        border: on ? '1px solid rgba(16,185,129,.15)' : '1px solid transparent'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 13
+      }
+    }, on ? '+' : 'o'), /*#__PURE__*/React.createElement("span", {
+      style: {
+        flex: 1,
+        fontSize: 12,
+        color: on ? 'var(--t1)' : 'var(--t3)',
+        fontWeight: on ? 600 : 400
+      }
+    }, it.label), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: on ? '#22c55e' : 'var(--t3)'
+      }
+    }, "+", it.w[cat], "%"));
+  }))), !isMobile && /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 280,
+      flexShrink: 0,
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement(ChecklistPanel, {
+    tf: tf,
+    checks: checks[tf] || {},
+    onToggle: toggleItem
+  })))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: 0,
+      borderTop: '1px solid var(--border)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 38,
+      flexShrink: 0,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 2,
+      padding: '0 10px',
+      background: 'var(--bg1)',
+      borderBottom: '1px solid var(--border)',
+      overflowX: 'auto'
+    }
+  }, (isMobile ? [{
+    id: 'trade',
+    label: '\uD83D\uDCBC Trade'
+  }, {
+    id: 'checklist',
+    label: '+ List'
+  }, {
+    id: 'analysis',
+    label: '\uD83D\uDCCA Analysis'
+  }] : [{
+    id: 'trade',
+    label: '\uD83D\uDCBC Trade Setup'
+  }, {
+    id: 'analysis',
+    label: '\uD83D\uDCCA Analysis'
+  }, {
+    id: 'orderflow',
+    label: '* Order Flow'
+  }]).map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setTab(t.id),
+    style: {
+      padding: '4px 13px',
+      borderRadius: 6,
+      border: 'none',
+      cursor: 'pointer',
+      fontFamily: 'var(--font)',
+      fontSize: 12,
+      fontWeight: 600,
+      background: tab === t.id ? 'var(--blue)' : 'transparent',
+      color: tab === t.id ? '#fff' : 'var(--t3)',
+      transition: 'all .12s',
+      flexShrink: 0
+    }
+  }, t.label)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: 'var(--t3)',
+      fontFamily: 'monospace',
+      flexShrink: 0
+    }
+  }, utcStr), sessions.find(s => s.act) && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 9,
+      fontWeight: 700,
+      padding: '2px 6px',
+      borderRadius: 4,
+      background: 'rgba(16,185,129,.1)',
+      color: 'var(--green)',
+      marginLeft: 6,
+      flexShrink: 0
+    }
+  }, sessions.find(s => s.act).n)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      overflowY: 'auto',
+      padding: 12
+    }
+  }, tab === 'trade' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,500px) 1fr',
+      gap: 12,
+      maxWidth: 1000
+    }
+  }, /*#__PURE__*/React.createElement(TradeForm, {
+    pair: pair,
+    tf: tf,
+    livePrice: livePrice,
+    checks: checks[tf] || {},
+    onTradeChange: setTradeLines
+  }), /*#__PURE__*/React.createElement(SessionsPanel, {
+    sessions: sessions,
+    utc: utcStr,
+    mktOpen: mktOpen
+  })), tab === 'checklist' && isMobile && /*#__PURE__*/React.createElement(ChecklistPanel, {
+    tf: tf,
+    checks: checks[tf] || {},
+    onToggle: toggleItem
+  }), tab === 'analysis' && /*#__PURE__*/React.createElement(AnalysisTab, {
+    checks: checks,
+    tf: tf
+  }), tab === 'orderflow' && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 12,
+      maxWidth: 600
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      padding: 20,
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 20,
+      marginBottom: 8
+    }
+  }, "\u26A1"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      marginBottom: 6
+    }
+  }, "Order Flow \xB7 ", pair), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--t3)'
+    }
+  }, "Advanced delta analysis \u2014 use the Order Flow tab in the chart area above")))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 28,
+      flexShrink: 0,
+      background: 'var(--bg1)',
+      borderTop: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 16,
+      height: 16,
+      borderRadius: 4,
+      background: 'linear-gradient(135deg,var(--blue),#1e40af)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 9
+    }
+  }, "\u2295"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 800,
+      fontSize: 11,
+      letterSpacing: 1,
+      background: 'linear-gradient(135deg,#60a5fa,#3b82f6)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
+    }
+  }, "ATHENA PRO")), showEco && /*#__PURE__*/React.createElement(EcoModal, {
+    onClose: () => setShowEco(false)
+  }), (showStratD || showPairD) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'fixed',
+      inset: 0,
+      zIndex: 99
+    },
+    onClick: () => {
+      setShowStratD(false);
+      setShowPairD(false);
+    }
+  }));
 }
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 50,
-flexShrink: 0,
-background: ‘var(–bg1)’,
-borderBottom: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8,
-padding: ‘0 10px’,
-zIndex: 150,
-flexWrap: ‘wrap’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-marginRight: 2
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-width: 26,
-height: 26,
-borderRadius: 7,
-background: ‘linear-gradient(135deg,var(–blue),#1e40af)’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-fontSize: 13
-}
-}, “\u2295”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 900,
-fontSize: 13,
-letterSpacing: .5,
-background: ‘linear-gradient(135deg,#60a5fa,#3b82f6)’,
-WebkitBackgroundClip: ‘text’,
-WebkitTextFillColor: ‘transparent’
-}
-}, “ATHENA”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’
-}
-}, /*#**PURE***/React.createElement(“button”, {
-onClick: () => setShowStratD(p => !p),
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 5,
-background: ‘var(–bg3)’,
-border: ‘1px solid var(–border2)’,
-borderRadius: 7,
-padding: ‘4px 9px’,
-color: ‘var(–t1)’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 12,
-fontWeight: 600
-}
-}, “\u2197 “, strategy === ‘scalping’ ? ‘Scalping’ : ‘Swing Trading’, “ “, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’
-}
-}, “\u25BE”)), showStratD && /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘absolute’,
-top: ‘calc(100%+4px)’,
-left: 0,
-background: ‘var(–bg2)’,
-border: ‘1px solid var(–border2)’,
-borderRadius: 10,
-overflow: ‘hidden’,
-zIndex: 300,
-minWidth: 200,
-boxShadow: ‘0 10px 40px rgba(0,0,0,.6)’,
-marginTop: 4
-}
-}, [{
-id: ‘scalping’,
-label: ‘Scalping’,
-desc: ‘Quick trades . 1m-45m’
-}, {
-id: ‘swing’,
-label: ‘Swing Trading’,
-desc: ‘Multi-day . 4H-1W’
-}].map(s => /*#**PURE***/React.createElement(“div”, {
-key: s.id,
-onClick: () => {
-setStrategy(s.id);
-setTf(s.id === ‘scalping’ ? ‘5m’ : ‘4H’);
-setShowStratD(false);
-},
-style: {
-padding: ‘10px 14px’,
-cursor: ‘pointer’,
-background: strategy === s.id ? ‘var(–blue-dim)’ : ‘transparent’,
-borderLeft: strategy === s.id ? ‘3px solid var(–blue-l)’ : ‘3px solid transparent’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontWeight: 700,
-fontSize: 13
-}
-}, s.label), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 11,
-color: ‘var(–t3)’,
-marginTop: 2
-}
-}, s.desc))))), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-gap: 2,
-background: ‘var(–bg3)’,
-padding: 3,
-borderRadius: 7,
-border: ‘1px solid var(–border)’,
-flexWrap: ‘wrap’
-}
-}, curTF.map(t => /*#**PURE***/React.createElement(“button”, {
-key: t,
-onClick: () => setTf(t),
-style: {
-padding: ‘4px 9px’,
-borderRadius: 5,
-border: ‘none’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 12,
-fontWeight: 700,
-background: tf === t ? ‘var(–blue)’ : ‘transparent’,
-color: tf === t ? ‘#fff’ : ‘var(–t3)’,
-transition: ‘all .12s’
-}
-}, t))), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1
-}
-}), /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 4,
-padding: ‘3px 8px’,
-borderRadius: 6,
-background: `rgba(${liveSrc === 'CLOSED' ? '239,68,68' : liveSrc === 'SIM' ? '245,158,11' : '16,185,129'},.1)`,
-border: `1px solid ${srcColor}40`,
-fontSize: 9,
-fontWeight: 700,
-color: srcColor
-}
-}, /*#**PURE***/React.createElement(“span”, {
-className: “pulse”,
-style: {
-width: 5,
-height: 5,
-borderRadius: ‘50%’,
-background: srcColor,
-display: ‘inline-block’
-}
-}), srcLabel), /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘relative’
-}
-}, /*#**PURE***/React.createElement(“button”, {
-onClick: () => setShowPairD(p => !p),
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 6,
-background: ‘var(–bg3)’,
-border: ‘1px solid var(–border2)’,
-borderRadius: 7,
-padding: ‘4px 11px’,
-color: ‘var(–t1)’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 13,
-fontWeight: 700
-}
-}, “\uD83C\uDF10 “, pair, livePrice && /*#**PURE***/React.createElement(“span”, {
-style: {
-color: isUp ? ‘var(–green)’ : ‘var(–red)’,
-fontSize: 11,
-fontFamily: ‘monospace’,
-fontWeight: 800
-}
-}, livePrice.toFixed(dec)), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-color: ‘var(–t3)’
-}
-}, “\u25BE”)), showPairD && /*#**PURE***/React.createElement(PairDropdown, {
-pair: pair,
-onSelect: setPair,
-onClose: () => setShowPairD(false)
-})), /*#**PURE***/React.createElement(“button”, {
-onClick: () => setShowEco(true),
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 4,
-padding: ‘4px 9px’,
-borderRadius: 7,
-border: ‘1px solid var(–border2)’,
-background: ‘var(–bg3)’,
-color: ‘var(–t2)’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 11,
-fontWeight: 600
-}
-}, “\uD83D\uDCC5 CALENDAR”), /*#**PURE***/React.createElement(“button”, {
-onClick: () => document.documentElement.requestFullscreen == null ? void 0 : document.documentElement.requestFullscreen(),
-style: {
-background: ‘none’,
-border: ‘none’,
-color: ‘var(–t3)’,
-cursor: ‘pointer’,
-fontSize: 15,
-padding: 4
-}
-}, “\u26F6”)), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-overflow: ‘hidden’,
-display: ‘flex’,
-flexDirection: ‘column’,
-minHeight: 0
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: ‘0 0 48%’,
-display: ‘flex’,
-flexDirection: ‘column’,
-minHeight: 0,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 30,
-flexShrink: 0,
-display: ‘flex’,
-alignItems: ‘center’,
-background: ‘var(–bg1)’,
-borderBottom: ‘1px solid var(–border)’,
-gap: 0
-}
-}, [{
-id: ‘chart’,
-label: ‘\uD83D\uDCC8 Chart’
-}, {
-id: ‘orderflow’,
-label: ‘* Order Flow’
-}, {
-id: ‘confluence’,
-label: ‘\uD83C\uDFAF Confluence’
-}].map(v => /*#**PURE***/React.createElement(“button”, {
-key: v.id,
-onClick: () => setChartView(v.id),
-style: {
-padding: ‘4px 14px’,
-border: ‘none’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 11,
-fontWeight: 700,
-height: ‘100%’,
-background: chartView === v.id ? ‘var(–bg2)’ : ‘transparent’,
-color: chartView === v.id ? ‘var(–t1)’ : ‘var(–t3)’,
-borderBottom: chartView === v.id ? ‘2px solid var(–blue)’ : ‘2px solid transparent’,
-transition: ‘all .15s’
-}
-}, v.label))), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-display: ‘flex’,
-minHeight: 0,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-position: ‘relative’,
-overflow: ‘hidden’
-}
-}, chartView === ‘chart’ && /*#**PURE***/React.createElement(TVChart, {
-key: pair + ‘_’ + tf,
-pair: pair,
-tf: tf,
-livePrice: livePrice,
-tradeLines: tradeLines
-}), chartView === ‘orderflow’ && /*#**PURE***/React.createElement(“div”, {
-style: {
-width: ‘100%’,
-height: ‘100%’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-background: ‘var(–bg1)’,
-flexDirection: ‘column’,
-gap: 12
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 24
-}
-}, “\u26A1”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 14,
-fontWeight: 700,
-color: ‘var(–t1)’
-}
-}, “Order Flow \xB7 “, pair, “ \xB7 “, tf), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 12,
-color: ‘var(–t3)’
-}
-}, “Volume delta analysis \u2014 coming soon”)), chartView === ‘confluence’ && /*#**PURE***/React.createElement(“div”, {
-style: {
-width: ‘100%’,
-height: ‘100%’,
-overflowY: ‘auto’,
-padding: 14,
-background: ‘var(–bg1)’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-justifyContent: ‘center’,
-marginBottom: 14
-}
-}, (() => {
-const tfsAll = […SCAL_TFS, …SWING_TFS];
-const rows = tfsAll.map(t => {
-const cat = tfCat(t);
-const sc = ITEMS.reduce((s, it) => {
-var _checks$t2;
-return (_checks$t2 = checks[t]) != null && _checks$t2[it.id] ? s + it.w[cat] : s;
-}, 0);
-const mx = ITEMS.reduce((s, it) => s + it.w[cat], 0);
-return Math.round(sc / mx * 100);
-});
-const ov = Math.round(rows.reduce((a, b) => a + b, 0) / rows.length);
-return /*#**PURE***/React.createElement(Ring, {
-pct: ov,
-size: 110
-});
-})()), ITEMS.map(it => {
-var _checks$tf;
-const on = !!((_checks$tf = checks[tf]) != null && _checks$tf[it.id]);
-const cat = tfCat(tf);
-return /*#**PURE***/React.createElement(“div”, {
-key: it.id,
-style: {
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 8,
-padding: ‘6px 8px’,
-marginBottom: 3,
-borderRadius: 7,
-background: on ? ‘rgba(16,185,129,.06)’ : ‘transparent’,
-border: on ? ‘1px solid rgba(16,185,129,.15)’ : ‘1px solid transparent’
-}
-}, /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 13
-}
-}, on ? ‘+’ : ‘o’), /*#**PURE***/React.createElement(“span”, {
-style: {
-flex: 1,
-fontSize: 12,
-color: on ? ‘var(–t1)’ : ‘var(–t3)’,
-fontWeight: on ? 600 : 400
-}
-}, it.label), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 11,
-fontWeight: 700,
-color: on ? ‘#22c55e’ : ‘var(–t3)’
-}
-}, “+”, it.w[cat], “%”));
-}))), !isMobile && /*#**PURE***/React.createElement(“div”, {
-style: {
-width: 280,
-flexShrink: 0,
-overflow: ‘hidden’
-}
-}, /*#**PURE***/React.createElement(ChecklistPanel, {
-tf: tf,
-checks: checks[tf] || {},
-onToggle: toggleItem
-})))), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-display: ‘flex’,
-flexDirection: ‘column’,
-minHeight: 0,
-borderTop: ‘1px solid var(–border)’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 38,
-flexShrink: 0,
-display: ‘flex’,
-alignItems: ‘center’,
-gap: 2,
-padding: ‘0 10px’,
-background: ‘var(–bg1)’,
-borderBottom: ‘1px solid var(–border)’,
-overflowX: ‘auto’
-}
-}, (isMobile ? [{
-id: ‘trade’,
-label: ‘\uD83D\uDCBC Trade’
-}, {
-id: ‘checklist’,
-label: ‘+ List’
-}, {
-id: ‘analysis’,
-label: ‘\uD83D\uDCCA Analysis’
-}] : [{
-id: ‘trade’,
-label: ‘\uD83D\uDCBC Trade Setup’
-}, {
-id: ‘analysis’,
-label: ‘\uD83D\uDCCA Analysis’
-}, {
-id: ‘orderflow’,
-label: ‘* Order Flow’
-}]).map(t => /*#**PURE***/React.createElement(“button”, {
-key: t.id,
-onClick: () => setTab(t.id),
-style: {
-padding: ‘4px 13px’,
-borderRadius: 6,
-border: ‘none’,
-cursor: ‘pointer’,
-fontFamily: ‘var(–font)’,
-fontSize: 12,
-fontWeight: 600,
-background: tab === t.id ? ‘var(–blue)’ : ‘transparent’,
-color: tab === t.id ? ‘#fff’ : ‘var(–t3)’,
-transition: ‘all .12s’,
-flexShrink: 0
-}
-}, t.label)), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1
-}
-}), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 10,
-color: ‘var(–t3)’,
-fontFamily: ‘monospace’,
-flexShrink: 0
-}
-}, utcStr), sessions.find(s => s.act) && /*#**PURE***/React.createElement(“span”, {
-style: {
-fontSize: 9,
-fontWeight: 700,
-padding: ‘2px 6px’,
-borderRadius: 4,
-background: ‘rgba(16,185,129,.1)’,
-color: ‘var(–green)’,
-marginLeft: 6,
-flexShrink: 0
-}
-}, sessions.find(s => s.act).n)), /*#**PURE***/React.createElement(“div”, {
-style: {
-flex: 1,
-overflowY: ‘auto’,
-padding: 12
-}
-}, tab === ‘trade’ && /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘grid’,
-gridTemplateColumns: isMobile ? ‘1fr’ : ‘minmax(0,500px) 1fr’,
-gap: 12,
-maxWidth: 1000
-}
-}, /*#**PURE***/React.createElement(TradeForm, {
-pair: pair,
-tf: tf,
-livePrice: livePrice,
-checks: checks[tf] || {},
-onTradeChange: setTradeLines
-}), /*#**PURE***/React.createElement(SessionsPanel, {
-sessions: sessions,
-utc: utcStr,
-mktOpen: mktOpen
-})), tab === ‘checklist’ && isMobile && /*#**PURE***/React.createElement(ChecklistPanel, {
-tf: tf,
-checks: checks[tf] || {},
-onToggle: toggleItem
-}), tab === ‘analysis’ && /*#**PURE***/React.createElement(AnalysisTab, {
-checks: checks,
-tf: tf
-}), tab === ‘orderflow’ && /*#**PURE***/React.createElement(“div”, {
-style: {
-display: ‘flex’,
-flexDirection: ‘column’,
-gap: 12,
-maxWidth: 600
-}
-}, /*#**PURE***/React.createElement(“div”, {
-className: “card”,
-style: {
-padding: 20,
-textAlign: ‘center’
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 20,
-marginBottom: 8
-}
-}, “\u26A1”), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 14,
-fontWeight: 700,
-marginBottom: 6
-}
-}, “Order Flow \xB7 “, pair), /*#**PURE***/React.createElement(“div”, {
-style: {
-fontSize: 12,
-color: ‘var(–t3)’
-}
-}, “Advanced delta analysis \u2014 use the Order Flow tab in the chart area above”)))))), /*#**PURE***/React.createElement(“div”, {
-style: {
-height: 28,
-flexShrink: 0,
-background: ‘var(–bg1)’,
-borderTop: ‘1px solid var(–border)’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-gap: 8
-}
-}, /*#**PURE***/React.createElement(“div”, {
-style: {
-width: 16,
-height: 16,
-borderRadius: 4,
-background: ‘linear-gradient(135deg,var(–blue),#1e40af)’,
-display: ‘flex’,
-alignItems: ‘center’,
-justifyContent: ‘center’,
-fontSize: 9
-}
-}, “\u2295”), /*#**PURE***/React.createElement(“span”, {
-style: {
-fontWeight: 800,
-fontSize: 11,
-letterSpacing: 1,
-background: ‘linear-gradient(135deg,#60a5fa,#3b82f6)’,
-WebkitBackgroundClip: ‘text’,
-WebkitTextFillColor: ‘transparent’
-}
-}, “ATHENA PRO”)), showEco && /*#**PURE***/React.createElement(EcoModal, {
-onClose: () => setShowEco(false)
-}), (showStratD || showPairD) && /*#**PURE***/React.createElement(“div”, {
-style: {
-position: ‘fixed’,
-inset: 0,
-zIndex: 99
-},
-onClick: () => {
-setShowStratD(false);
-setShowPairD(false);
-}
-}));
-}
-ReactDOM.createRoot(document.getElementById(‘root’)).render(/*#**PURE***/React.createElement(App, null));
-} catch(e) {
-document.getElementById(‘root’).innerHTML = ‘<div style="padding:16px;color:#ef4444;font-family:monospace;font-size:11px;background:#0b0e1a;min-height:100vh;overflow:auto;white-space:pre-wrap;">ATHENA ERROR:\n\n’ + (e && e.message || e) + ‘\n\nStack:\n’ + (e && e.stack || ‘’) + ‘</div>’;
-}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+  } catch(e) {
+    document.getElementById('root').innerHTML = '<div style="padding:16px;color:#ef4444;font-family:monospace;font-size:11px;background:#0b0e1a;min-height:100vh;overflow:auto;white-space:pre-wrap;">ATHENA ERROR:\n\n' + (e && e.message || e) + '\n\nStack:\n' + (e && e.stack || '') + '</div>';
+  }
 });
 </script>
-
 </body>
 </html>
