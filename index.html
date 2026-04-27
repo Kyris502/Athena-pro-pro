@@ -705,59 +705,48 @@ const ref = useRef(null);
 
 useEffect(() => {
 if (!ref.current) return;
-// Clear previous
 ref.current.innerHTML = ‘’;
 
 ```
-const container = document.createElement('div');
-container.id = containerId;
-container.style.cssText = 'width:100%;height:100%;';
-ref.current.appendChild(container);
-
-const script = document.createElement('script');
-script.type = 'text/javascript';
-script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-script.async = true;
-
+// Build studies array
 const studies = [];
 if (chartSettings?.ema50 !== false) studies.push('STD;EMA');
 if (chartSettings?.sma20)  studies.push('STD;SMA');
-if (chartSettings?.boll)   studies.push('STD;Bollinger Bands');
+if (chartSettings?.boll)   studies.push('STD;Bollinger_Bands');
 if (chartSettings?.rsi)    studies.push('STD;RSI');
 if (chartSettings?.macd)   studies.push('STD;MACD');
 if (chartSettings?.stoch)  studies.push('STD;Stochastic');
-if (chartSettings?.atr)    studies.push('STD;Average True Range');
+if (chartSettings?.atr)    studies.push('STD;ATR');
 if (chartSettings?.adx)    studies.push('STD;ADX');
 
-const config = {
-  autosize: true,
-  symbol: sym,
-  interval: iv,
-  timezone: 'Etc/UTC',
-  theme: chartSettings?.theme || 'dark',
-  style: '1',
-  locale: 'en',
-  backgroundColor: chartSettings?.theme==='light'?'rgba(255,255,255,1)':'rgba(7, 9, 15, 1)',
-  gridColor: chartSettings?.theme==='light'?'rgba(0,0,0,.06)':'rgba(26, 34, 56, 0.5)',
-  hide_top_toolbar: false,
-  hide_legend: false,
-  allow_symbol_change: false,
-  save_image: false,
-  withdateranges: true,
-  studies,
-  container_id: containerId
-};
+const theme = chartSettings?.theme || 'dark';
+const studiesStr = studies.map(s => '&studies=' + encodeURIComponent(s)).join('');
 
-script.innerHTML = JSON.stringify(config);
-container.appendChild(script);
+// Use the iframe embed URL - working for GitHub Pages
+const url = 'https://www.tradingview.com/widgetembed/'
+  + '?frameElementId=' + containerId
+  + '&symbol=' + encodeURIComponent(sym)
+  + '&interval=' + iv
+  + '&theme=' + theme
+  + '&style=1&locale=en&withdateranges=1'
+  + '&hide_top_toolbar=0&hide_side_toolbar=0'
+  + '&allow_symbol_change=0&save_image=0'
+  + studiesStr;
 
-return () => {
-  if (ref.current) ref.current.innerHTML = '';
-};
+const iframe = document.createElement('iframe');
+iframe.src = url;
+iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+iframe.setAttribute('allowfullscreen', '');
+iframe.setAttribute('title', 'TradingView Chart');
+ref.current.appendChild(iframe);
+
+return () => { if (ref.current) ref.current.innerHTML = ''; };
 ```
 
-// eslint-disable-next-line
-}, [sym, iv, containerId, chartSettings?.ema50, chartSettings?.sma20, chartSettings?.boll, chartSettings?.rsi, chartSettings?.macd, chartSettings?.stoch, chartSettings?.atr, chartSettings?.theme]);
+}, [sym, iv, containerId,
+chartSettings?.ema50, chartSettings?.sma20, chartSettings?.boll,
+chartSettings?.rsi, chartSettings?.macd, chartSettings?.stoch,
+chartSettings?.atr, chartSettings?.theme]);
 
 return <div ref={ref} style={{width:‘100%’,height:‘100%’}}/>;
 }
