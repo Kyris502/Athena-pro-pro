@@ -342,7 +342,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:13px
 <body>
 <div id="root">
   <div id="loading-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#07090f;color:#e2e8f5;font-family:Inter,sans-serif;">
-    <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#1e40af);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;">⊕</div>
+    <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#1e40af);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;">\u2295</div>
     <div style="font-size:18px;font-weight:800;letter-spacing:1px;background:linear-gradient(135deg,#60a5fa,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">ATHENA PRO</div>
     <div style="font-size:12px;color:#424d6a;margin-bottom:20px;">Loading terminal...</div>
     <div style="width:160px;height:3px;background:#1a2238;border-radius:2px;overflow:hidden;">
@@ -368,9 +368,9 @@ window.onerror = function(msg,src,line,col,err){
 window.addEventListener('load', function() {
   try {
 
-// ─────────────────────────────────────────────────────────────────────────
-// ATHENA PRO — Complete Trading Terminal
-// ─────────────────────────────────────────────────────────────────────────
+// ———————————————————————––
+// ATHENA PRO - Complete Trading Terminal
+// ———————————————————————––
 
 const {
 useState,
@@ -380,7 +380,7 @@ useMemo,
 useCallback
 } = React;
 
-// ── CONSTANTS ────────────────────────────────────────────────────────────
+// – CONSTANTS ————————————————————
 
 const PAIR_GROUPS = {
 ‘Forex Major’: [‘EUR/USD’, ‘GBP/USD’, ‘AUD/USD’, ‘USD/JPY’, ‘USD/CAD’, ‘NZD/USD’, ‘USD/CHF’],
@@ -724,27 +724,27 @@ l: 10
 }];
 const SESSIONS = [{
 n: ‘Sydney’,
-icon: ‘🌏’,
+icon: ‘\uD83C\uDF0F’,
 s: 21,
 e: 6
 }, {
 n: ‘Tokyo’,
-icon: ‘🏯’,
+icon: ‘\uD83C\uDFEF’,
 s: 0,
 e: 9
 }, {
 n: ‘London’,
-icon: ‘🏛’,
+icon: ‘\uD83C\uDFDB’,
 s: 7,
 e: 16
 }, {
 n: ‘New York’,
-icon: ‘🗽’,
+icon: ‘\uD83D\uDDFD’,
 s: 12,
 e: 21
 }];
 
-// ── HELPERS ──────────────────────────────────────────────────────────────
+// – HELPERS –––––––––––––––––––––––––––––––
 
 function pairDec(pair) {
 const isJPY = pair.includes(‘JPY’);
@@ -816,7 +816,7 @@ if (day === 5 && t >= 22 * 60) return false;
 return true;
 }
 
-// ── LIVE PRICE HOOK ───────────────────────────────────────────────────────
+// – LIVE PRICE HOOK —————————————————––
 
 let TD_KEY = ‘’;
 try {
@@ -958,7 +958,7 @@ src
 };
 }
 
-// ── UI COMPONENTS ─────────────────────────────────────────────────────────
+// – UI COMPONENTS ———————————————————
 
 function Toggle(_ref) {
 let {
@@ -1045,7 +1045,7 @@ marginTop: 1
 }, label)));
 }
 
-// ── TV CHART ──────────────────────────────────────────────────────────────
+// – TV CHART –––––––––––––––––––––––––––––––
 
 function TVChart(_ref3) {
 let {
@@ -1237,7 +1237,7 @@ letterSpacing: .5,
 background: bull ? ‘rgba(16,185,129,.15)’ : ‘rgba(239,68,68,.15)’,
 color: bull ? ‘var(–green)’ : ‘var(–red)’
 }
-}, bull ? ‘▲ BULLISH’ : ‘▼ BEARISH’)), scalp && livePrice && /*#**PURE***/React.createElement(“div”, {
+}, bull ? ‘^ BULLISH’ : ‘v BEARISH’)), scalp && livePrice && /*#**PURE***/React.createElement(“div”, {
 style: {
 position: ‘absolute’,
 bottom: 28,
@@ -1322,7 +1322,7 @@ fontWeight: 700
 })()));
 }
 
-// ── CHECKLIST PANEL ───────────────────────────────────────────────────────
+// – CHECKLIST PANEL —————————————————––
 
 function ChecklistPanel(_ref4) {
 let {
@@ -1450,7 +1450,7 @@ letterSpacing: .5,
 background: bull ? ‘rgba(16,185,129,.1)’ : ‘rgba(239,68,68,.1)’,
 color: bull ? ‘var(–green)’ : ‘var(–red)’
 }
-}, bull ? ‘▲ BULLISH’ : ‘▼ BEARISH’), /*#**PURE***/React.createElement(“span”, {
+}, bull ? ‘^ BULLISH’ : ‘v BEARISH’), /*#**PURE***/React.createElement(“span”, {
 style: {
 fontSize: 10,
 color: ‘var(–t3)’,
@@ -1459,7 +1459,7 @@ marginLeft: ‘auto’
 }, score, “/”, max)));
 }
 
-// ── SESSIONS PANEL ────────────────────────────────────────────────────────
+// – SESSIONS PANEL ––––––––––––––––––––––––––––
 
 function SessionsPanel(_ref5) {
 let {
@@ -1591,7 +1591,7 @@ color: ‘var(–t3)’
 }, String(s.s).padStart(2, ‘0’), “:00 \u2013 “, String(s.e).padStart(2, ‘0’), “:00 UTC”))))));
 }
 
-// ── TRADE FORM ────────────────────────────────────────────────────────────
+// – TRADE FORM ————————————————————
 
 function TradeForm(_ref6) {
 var _pred$entry, _pred$sl, _pred$tp;
@@ -1638,7 +1638,7 @@ const rew = Math.abs(parseFloat(tp) - parseFloat(entry));
 return r ? rew / r : 0;
 }, [entry, sl, tp]);
 const riskUSD = (parseFloat(bal) || 0) * (parseFloat(rPct) || 0) / 100;
-const slPips = entry && sl ? (Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip).toFixed(1) : ‘—’;
+const slPips = entry && sl ? (Math.abs(parseFloat(entry) - parseFloat(sl)) / cfg.pip).toFixed(1) : ‘-’;
 async function runPredict() {
 if (!livePrice) return;
 setLoading(true);
@@ -2152,7 +2152,7 @@ color: lots > 0 ? ‘var(–blue-l)’ : ‘var(–t3)’,
 lineHeight: 1,
 fontFamily: ‘monospace’
 }
-}, lots > 0 ? lots.toFixed(2) : ‘—’), /*#**PURE***/React.createElement(“div”, {
+}, lots > 0 ? lots.toFixed(2) : ‘-’), /*#**PURE***/React.createElement(“div”, {
 style: {
 fontSize: 9,
 color: ‘var(–t3)’,
@@ -2177,7 +2177,7 @@ fontWeight: 700,
 color: ‘var(–red)’,
 fontFamily: ‘monospace’
 }
-}, riskUSD > 0 ? ‘$’ + riskUSD.toFixed(2) : ‘—’)), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
+}, riskUSD > 0 ? ‘$’ + riskUSD.toFixed(2) : ‘-’)), /*#**PURE***/React.createElement(“div”, null, /*#**PURE***/React.createElement(“div”, {
 style: {
 fontSize: 9,
 color: ‘var(–t3)’
@@ -2205,7 +2205,7 @@ fontWeight: 800,
 color: rr >= 2 ? ‘var(–green)’ : rr >= 1 ? ‘var(–gold)’ : ‘var(–red)’,
 fontFamily: ‘monospace’
 }
-}, rr > 0 ? ‘1:’ + rr.toFixed(1) : ‘—’))), lots > 0 && /*#**PURE***/React.createElement(“div”, {
+}, rr > 0 ? ‘1:’ + rr.toFixed(1) : ‘-’))), lots > 0 && /*#**PURE***/React.createElement(“div”, {
 style: {
 marginTop: 8,
 padding: ‘6px 10px’,
@@ -2216,10 +2216,10 @@ background: dir === ‘BUY’ ? ‘var(–green-dim)’ : ‘var(–red-dim)’,
 color: dir === ‘BUY’ ? ‘var(–green)’ : ‘var(–red)’,
 border: `1px solid ${dir === 'BUY' ? 'rgba(16,185,129,.25)' : 'rgba(239,68,68,.25)'}`
 }
-}, dir === ‘BUY’ ? ‘▲’ : ‘▼’, “ “, dir, “ “, /*#**PURE***/React.createElement(“strong”, null, lots.toFixed(2)), “ lots \xB7 “, pair, “ \xB7 Risk $”, riskUSD.toFixed(2))));
+}, dir === ‘BUY’ ? ‘^’ : ‘v’, “ “, dir, “ “, /*#**PURE***/React.createElement(“strong”, null, lots.toFixed(2)), “ lots \xB7 “, pair, “ \xB7 Risk $”, riskUSD.toFixed(2))));
 }
 
-// ── ANALYSIS TAB ──────────────────────────────────────────────────────────
+// – ANALYSIS TAB –––––––––––––––––––––––––––––
 
 function AnalysisTab(_ref1) {
 let {
@@ -2552,7 +2552,7 @@ textAlign: ‘right’
 })))));
 }
 
-// ── ECO CALENDAR MODAL ────────────────────────────────────────────────────
+// – ECO CALENDAR MODAL ––––––––––––––––––––––––––
 
 const ECO_FALLBACK = [{
 t: ‘08:30’,
@@ -2587,15 +2587,15 @@ t: ‘17:30’,
 ccy: ‘GBP’,
 imp: ‘medium’,
 ev: ‘BOE Gov Speaks’,
-prev: ‘—’,
-fore: ‘—’
+prev: ‘-’,
+fore: ‘-’
 }, {
 t: ‘20:00’,
 ccy: ‘USD’,
 imp: ‘high’,
 ev: ‘FOMC Minutes’,
-prev: ‘—’,
-fore: ‘—’
+prev: ‘-’,
+fore: ‘-’
 }];
 function EcoModal(_ref13) {
 let {
@@ -2619,13 +2619,13 @@ t: e.date ? new Date(e.date).toLocaleTimeString(‘en-GB’, {
 hour: ‘2-digit’,
 minute: ‘2-digit’,
 timeZone: ‘UTC’
-}) : ‘—’,
+}) : ‘-’,
 date: e.date,
-ccy: e.country || ‘—’,
+ccy: e.country || ‘-’,
 imp: e.impact === ‘High’ ? ‘high’ : e.impact === ‘Medium’ ? ‘medium’ : ‘low’,
-ev: e.title || ‘—’,
-prev: e.previous || ‘—’,
-fore: e.forecast || ‘—’,
+ev: e.title || ‘-’,
+prev: e.previous || ‘-’,
+fore: e.forecast || ‘-’,
 actual: e.actual || null
 })));
 setLoading(false);
@@ -2822,7 +2822,7 @@ color: e.actual ? ‘var(–green)’ : ‘var(–gold)’
 }, e.actual || e.fore)))))));
 }
 
-// ── PAIR SEARCH DROPDOWN ──────────────────────────────────────────────────
+// – PAIR SEARCH DROPDOWN –––––––––––––––––––––––––
 
 function PairDropdown(_ref14) {
 let {
@@ -2920,7 +2920,7 @@ if (p !== pair) e.currentTarget.style.background = ‘transparent’;
 })));
 }
 
-// ── MAIN APP ──────────────────────────────────────────────────────────────
+// – MAIN APP –––––––––––––––––––––––––––––––
 
 function App() {
 const [strategy, setStrategy] = useState(‘swing’);
@@ -2990,7 +2990,7 @@ const toggleItem = (id, v) => setChecks(p => ({
 
 // Src badge color
 const srcColor = liveSrc === ‘LIVE’ || liveSrc === ‘BINANCE’ ? ‘var(–green)’ : liveSrc === ‘CLOSED’ ? ‘var(–red)’ : ‘var(–gold)’;
-const srcLabel = liveSrc === ‘LIVE’ ? ‘LIVE·TD’ : liveSrc === ‘BINANCE’ ? ‘LIVE·BINANCE’ : liveSrc === ‘CLOSED’ ? ‘CLOSED’ : ‘SIM’;
+const srcLabel = liveSrc === ‘LIVE’ ? ‘LIVE.TD’ : liveSrc === ‘BINANCE’ ? ‘LIVE.BINANCE’ : liveSrc === ‘CLOSED’ ? ‘CLOSED’ : ‘SIM’;
 return /*#**PURE***/React.createElement(“div”, {
 style: {
 display: ‘flex’,
@@ -3080,11 +3080,11 @@ marginTop: 4
 }, [{
 id: ‘scalping’,
 label: ‘Scalping’,
-desc: ‘Quick trades · 1m–45m’
+desc: ‘Quick trades . 1m-45m’
 }, {
 id: ‘swing’,
 label: ‘Swing Trading’,
-desc: ‘Multi-day · 4H–1W’
+desc: ‘Multi-day . 4H-1W’
 }].map(s => /*#**PURE***/React.createElement(“div”, {
 key: s.id,
 onClick: () => {
@@ -3250,13 +3250,13 @@ gap: 0
 }
 }, [{
 id: ‘chart’,
-label: ‘📈 Chart’
+label: ‘\uD83D\uDCC8 Chart’
 }, {
 id: ‘orderflow’,
-label: ‘⚡ Order Flow’
+label: ‘* Order Flow’
 }, {
 id: ‘confluence’,
-label: ‘🎯 Confluence’
+label: ‘\uD83C\uDFAF Confluence’
 }].map(v => /*#**PURE***/React.createElement(“button”, {
 key: v.id,
 onClick: () => setChartView(v.id),
@@ -3368,7 +3368,7 @@ border: on ? ‘1px solid rgba(16,185,129,.15)’ : ‘1px solid transparent’
 style: {
 fontSize: 13
 }
-}, on ? ‘✅’ : ‘⬜’), /*#**PURE***/React.createElement(“span”, {
+}, on ? ‘+’ : ‘o’), /*#**PURE***/React.createElement(“span”, {
 style: {
 flex: 1,
 fontSize: 12,
@@ -3414,22 +3414,22 @@ overflowX: ‘auto’
 }
 }, (isMobile ? [{
 id: ‘trade’,
-label: ‘💼 Trade’
+label: ‘\uD83D\uDCBC Trade’
 }, {
 id: ‘checklist’,
-label: ‘✅ List’
+label: ‘+ List’
 }, {
 id: ‘analysis’,
-label: ‘📊 Analysis’
+label: ‘\uD83D\uDCCA Analysis’
 }] : [{
 id: ‘trade’,
-label: ‘💼 Trade Setup’
+label: ‘\uD83D\uDCBC Trade Setup’
 }, {
 id: ‘analysis’,
-label: ‘📊 Analysis’
+label: ‘\uD83D\uDCCA Analysis’
 }, {
 id: ‘orderflow’,
-label: ‘⚡ Order Flow’
+label: ‘* Order Flow’
 }]).map(t => /*#**PURE***/React.createElement(“button”, {
 key: t.id,
 onClick: () => setTab(t.id),
